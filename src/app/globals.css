@@ -1,0 +1,7 @@
+@layer reset, base, tokens, recipes, utilities;
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+}
