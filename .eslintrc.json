@@ -1,3 +1,14 @@
 {
-  "extends": "next"
+  "extends": ["next", "airbnb", "airbnb-typescript", "plugin:react/jsx-runtime"],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "rules": {
+    "react/function-component-definition": [
+      2,
+      { "namedComponents": "arrow-function", "unnamedComponents": "arrow-function" }
+    ],
+    "import/prefer-default-export": 0,
+    "implicit-arrow-linebreak": 0
+  }
 }

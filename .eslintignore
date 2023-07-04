@@ -1,0 +1,9 @@
+node_modules
+.yarn
+.eslintrc.js
+vite.config.ts
+dist
+*.mjs
+.next
+styled-system
+next.config.js

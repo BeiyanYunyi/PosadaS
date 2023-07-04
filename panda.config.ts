@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { defineConfig } from '@pandacss/dev';
 
 export default defineConfig({

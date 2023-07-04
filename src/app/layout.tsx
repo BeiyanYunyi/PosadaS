@@ -9,10 +9,8 @@ export const metadata = {
   description: '永不陷落的波派',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="en" className={css({ maxW: '100vw', overflowX: 'hidden' })}>
-      <body className={inter.className}>{children}</body>
-    </html>
-  );
-}
+export default ({ children }: { children: React.ReactNode }) => (
+  <html lang="en" className={css({ maxW: '100vw', overflowX: 'hidden' })}>
+    <body className={inter.className}>{children}</body>
+  </html>
+);
