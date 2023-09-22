@@ -1,5 +1,5 @@
-import { IAuthResponse, IGetBandsResponse } from '../types/band';
-import prisma from '../utils/database';
+import { IAuthResponse, IGetBandsResponse } from '@/app/types/band';
+import prisma from '@/app/utils/database';
 
 const b64Encode = (str: string) => Buffer.from(str).toString('base64');
 const Authorization = `Basic ${b64Encode(

@@ -1,5 +1,5 @@
 {
-  "extends": ["next", "airbnb", "airbnb-typescript", "plugin:react/jsx-runtime"],
+  "extends": ["next", "airbnb", "airbnb-typescript", "plugin:react/jsx-runtime", "prettier"],
   "parserOptions": {
     "project": "./tsconfig.json"
   },

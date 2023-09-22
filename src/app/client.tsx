@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-const Client = ({ content }: { content: string }) => {
+const Client = () => {
   const [cont2, setCont2] = useState('');
   useEffect(() => {
     fetch('/api/hw')
@@ -15,7 +15,6 @@ const Client = ({ content }: { content: string }) => {
   }, []);
   return (
     <div>
-      <p>{content}</p>
       <p>{cont2}</p>
     </div>
   );
