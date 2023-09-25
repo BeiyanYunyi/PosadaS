@@ -1,5 +1,9 @@
 import AppLink from '@/app/components/AppLink';
+import DeletedTag from '@/app/components/DeletedTag';
+import EliteTag from '@/app/components/EliteTag';
+import OriginalTag from '@/app/components/OriginalTag';
 import prisma from '@/app/utils/database';
+import isUUID from '@/app/utils/isUUID';
 import processHTML from '@/app/utils/processHTML';
 import { css } from '@styles/css';
 import Image from 'next/image';
@@ -41,6 +45,9 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
             mb: '1rem',
           })}
         >
+          {topic.isElite && <EliteTag />}
+          {isUUID(topic.topicID) && <OriginalTag />}
+          {!isUUID(topic.topicID) && !!topic.deleteTime && <DeletedTag />}
           <AppLink href={`https://www.douban.com/people/${topic.authorID}`}>
             {topic.authorName}
           </AppLink>
@@ -52,7 +59,10 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
             {new Date(Number(topic.createTime!) * 1000).toLocaleString()}
           </span>
         </h4>
-        <section dangerouslySetInnerHTML={{ __html: processHTML(topic.content!) }} />
+        <section
+          className={css({ mb: '1.5rem' })}
+          dangerouslySetInnerHTML={{ __html: processHTML(topic.content!) }}
+        />
       </article>
       {contents.map((item) => (
         <article key={item.replyID}>
@@ -66,6 +76,7 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
               mb: '1rem',
             })}
           >
+            {isUUID(item.replyID) && <OriginalTag />}
             <AppLink href={`https://www.douban.com/people/${item.authorID}`}>
               {item.authorName}
             </AppLink>

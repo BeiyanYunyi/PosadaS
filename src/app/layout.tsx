@@ -14,6 +14,7 @@ export default ({ children }: { children: React.ReactNode }) => (
         className={css({
           mt: '40px',
           py: '6px',
+          px: '0.5rem',
           color: '#999',
           borderTop: '1px dashed #ddd',
           fontSize: '0.8125rem',
