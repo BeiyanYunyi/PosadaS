@@ -1,3 +1,4 @@
+import Random from './components/Random';
 import TopicList from './components/TopicList';
 import prisma from './utils/database';
 
@@ -16,6 +17,11 @@ const content = await prisma.topicList.findMany({
   take: 100,
 });
 
-const Home = () => <TopicList content={content} />;
+const Home = () => (
+  <>
+    <Random />
+    <TopicList content={content} />
+  </>
+);
 
 export default Home;

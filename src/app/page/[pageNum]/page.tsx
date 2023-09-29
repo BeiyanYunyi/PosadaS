@@ -25,7 +25,7 @@ const Page = async ({ params }: { params: { pageNum: string } }) => {
   });
   const count = Math.round((await prisma.topicList.count()) / 100);
   return (
-    <div>
+    <>
       <TopicList content={content} />
       <div>
         {Array.from({ length: count }, (_, i) => i + 1).map((item) => (
@@ -34,7 +34,7 @@ const Page = async ({ params }: { params: { pageNum: string } }) => {
           </AppLink>
         ))}
       </div>
-    </div>
+    </>
   );
 };
 
