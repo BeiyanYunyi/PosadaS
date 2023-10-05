@@ -1,5 +1,8 @@
 import { css } from '@styles/css';
 import './globals.css';
+import GitHubIcon from './components/GitHubIcon';
+import Link from 'next/link';
+import AppLink from './components/AppLink';
 
 export const metadata = {
   title: '影之避难所',
@@ -34,8 +37,13 @@ export default ({ children }: { children: React.ReactNode }) => (
           fontSize: '0.8125rem',
         })}
       >
-        {' '}
         © 2020－2023 Posadas Group, all rights <strong>reversed</strong> 阿根廷波萨达斯科技有限公司
+        <br />
+        备份于豆瓣小组“后启示录地下避难所” · 内容版权归原作者所有 · 代码以 AGPL 协议
+        <AppLink href="https://github.com/BeiyanYunyi/PosadaS">开源</AppLink> ·{' '}
+        <Link href="https://github.com/BeiyanYunyi/PosadaS" className={css({ display: 'inline' })}>
+          <GitHubIcon className={css({ display: 'inline' })} />
+        </Link>
       </footer>
     </body>
   </html>
