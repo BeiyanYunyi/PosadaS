@@ -12,10 +12,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-export const generateStaticParams = async () => {
-  const topics = await prisma.topicList.findMany({ select: { topicID: true } });
-  return topics.map((item) => ({ topicID: item.topicID }));
-};
+// export const generateStaticParams = async () => {
+//   const topics = await prisma.topicList.findMany({ select: { topicID: true } });
+//   return topics.map((item) => ({ topicID: item.topicID }));
+// };
 
 export const generateMetadata = async ({ params }: { params: { topicID: string } }) => {
   const topic = await prisma.topicList.findUnique({
