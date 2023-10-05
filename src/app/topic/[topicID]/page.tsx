@@ -5,6 +5,7 @@ import OriginalTag from '@/app/components/OriginalTag';
 import Random from '@/app/components/Random';
 import prisma from '@/app/utils/database';
 import isUUID from '@/app/utils/isUUID';
+import localeArgs from '@/app/utils/localeArgs';
 import processHTML from '@/app/utils/processHTML';
 import { css } from '@styles/css';
 import Image from 'next/image';
@@ -72,7 +73,7 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
                 mx: '1rem',
               })}
             >
-              {new Date(Number(topic.createTime!) * 1000).toLocaleString()}
+              {new Date(Number(topic.createTime!) * 1000).toLocaleString(...localeArgs)}
             </span>
           </h4>
           <section
@@ -101,7 +102,7 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
                   mx: '1rem',
                 })}
               >
-                {new Date(Number(item.replyTime!) * 1000).toLocaleString()}
+                {new Date(Number(item.replyTime!) * 1000).toLocaleString(...localeArgs)}
               </span>
             </h4>
             {item.quoting && (

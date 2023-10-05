@@ -6,12 +6,13 @@ import isUUID from '@/app/utils/isUUID';
 import { css } from '@styles/css';
 import clsx from 'clsx';
 import { FC } from 'react';
+import localeArgs from '../utils/localeArgs';
 import ReplyIcon from './ReplyIcon';
 
 const liStyle = css({
   display: 'grid',
   gridAutoFlow: 'row dense',
-  gridTemplateColumns: '1.8fr 0.8fr 2fr',
+  gridTemplateColumns: '1fr 2fr',
   lg: { gridTemplateColumns: '8fr 2fr 0.5fr 2fr' },
   justifyContent: 'space-between',
   position: 'relative',
@@ -46,22 +47,22 @@ const TopicList: FC<{
       <span className={thStyle}>讨论</span>
       <span className={thStyle}>作者</span>
       <span className={thStyle}>回应</span>
-      <span className={thStyle}>最后回应</span>
+      <span className={clsx(thStyle, css({ textAlign: 'center' }))}>最后回应</span>
     </li>
     {content.map((item) => (
       <li key={item.topicID} className={liStyle}>
-        <div className={css({ gridColumn: 3, lg: { gridColumn: 1 } })}>
+        <div className={css({ gridColumn: 2, lg: { gridColumn: 1 } })}>
           {item.isElite && <EliteTag />}
           {isUUID(item.topicID) && <OriginalTag />}
           {!isUUID(item.topicID) && !!item.deleteTime && <DeletedTag />}
           <AppLink href={`/topic/${item.topicID}`}>{item.title}</AppLink>
         </div>
-        <div>
+        <div className={css({ gridColumn: 2, lg: { gridColumn: 1 } })}>
           <AppLink href={`https://www.douban.com/people/${item.authorID}`}>
             {item.authorName}
           </AppLink>
         </div>
-        <p className={thStyle}>
+        <p className={clsx(thStyle, css({ fontSize: '0.9rem', lg: { fontSize: '1rem' } }))}>
           <ReplyIcon
             className={css({
               w: '16px',
@@ -73,8 +74,13 @@ const TopicList: FC<{
           />
           {item.reply}
         </p>
-        <time className={thStyle}>
-          {new Date(Number(item.lastReplyTime!) * 1000).toLocaleString()}
+        <time
+          className={clsx(
+            thStyle,
+            css({ fontSize: '0.9rem', textAlign: 'end', lg: { fontSize: '1rem' } }),
+          )}
+        >
+          {new Date(Number(item.lastReplyTime!) * 1000).toLocaleString(...localeArgs)}
         </time>
       </li>
     ))}
