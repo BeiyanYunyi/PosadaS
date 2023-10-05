@@ -99,9 +99,9 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
                   my: '20px',
                   pl: '7px',
                   position: 'relative',
-                  width: '30em',
                   fontSize: '0.875rem',
                   color: '#666',
+                  lg: { w: '30rem' },
                 })}
               >
                 {item.quotingText}
@@ -117,7 +117,15 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
               <Link
                 referrerPolicy="no-referrer"
                 href={item.image}
-                className={css({ display: 'block', position: 'relative', h: '30rem', w: '30rem' })}
+                className={css({
+                  display: 'block',
+                  position: 'relative',
+                  h: '30rem',
+                  w: 'full',
+                  lg: {
+                    w: '30rem',
+                  },
+                })}
               >
                 <Image
                   className={css({ objectFit: 'contain' })}
