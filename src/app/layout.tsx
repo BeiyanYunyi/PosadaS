@@ -1,8 +1,8 @@
 import { css } from '@styles/css';
-import './globals.css';
-import GitHubIcon from './components/GitHubIcon';
 import Link from 'next/link';
 import AppLink from './components/AppLink';
+import GitHubIcon from './components/GitHubIcon';
+import './globals.css';
 
 export const metadata = {
   title: '影之避难所',
