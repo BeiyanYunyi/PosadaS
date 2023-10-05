@@ -16,6 +16,18 @@ export const generateStaticParams = async () => {
   return topics.map((item) => ({ topicID: item.topicID }));
 };
 
+export const generateMetadata = async ({ params }: { params: { topicID: string } }) => {
+  const topic = await prisma.topicList.findUnique({
+    where: { topicID: params.topicID },
+    select: { title: true, content: true },
+  });
+  if (!topic) notFound();
+  return {
+    title: topic.title,
+    description: topic.content?.replace(/<[^>]+>/g, ''),
+  };
+};
+
 const Page = async ({ params }: { params: { topicID: string } }) => {
   const [topic, contents] = await Promise.all([
     prisma.topicList.findUnique({ where: { topicID: params.topicID } }),

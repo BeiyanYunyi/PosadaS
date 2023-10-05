@@ -4,6 +4,7 @@ import './globals.css';
 export const metadata = {
   title: '影之避难所',
   description: '永不陷落的波派',
+  metadataBase: new URL(process.env.SERVE_URL || ''),
 };
 
 export default ({ children }: { children: React.ReactNode }) => (
