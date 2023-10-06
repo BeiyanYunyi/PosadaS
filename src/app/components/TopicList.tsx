@@ -11,8 +11,7 @@ import ReplyIcon from './ReplyIcon';
 
 const liStyle = css({
   display: 'grid',
-  gridAutoFlow: 'row dense',
-  gridTemplateColumns: '1fr 2fr',
+  gridTemplateColumns: '2fr 0.8fr 3fr',
   lg: { gridTemplateColumns: '8fr 2fr 0.5fr 2fr' },
   justifyContent: 'space-between',
   position: 'relative',
@@ -51,22 +50,23 @@ const TopicList: FC<{
     </li>
     {content.map((item) => (
       <li key={item.topicID} className={liStyle}>
-        <div className={css({ gridColumn: 2, lg: { gridColumn: 1 } })}>
+        <div className={css({ gridColumn: 3, lg: { gridColumn: 1 } })}>
           {item.isElite && <EliteTag />}
           {isUUID(item.topicID) && <OriginalTag />}
           {!isUUID(item.topicID) && !!item.deleteTime && <DeletedTag />}
           <AppLink href={`/topic/${item.topicID}`}>{item.title}</AppLink>
         </div>
-        <div className={css({ gridColumn: 2, lg: { gridColumn: 1 } })}>
-          <AppLink href={`https://www.douban.com/people/${item.authorID}`}>
-            {item.authorName}
-          </AppLink>
-        </div>
-        <p className={clsx(thStyle, css({ fontSize: '0.9rem', lg: { fontSize: '1rem' } }))}>
+        <AppLink
+          href={`https://www.douban.com/people/${item.authorID}`}
+          className={css({ fontSize: '0.8rem', w: 'fit-content', lg: { fontSize: '1rem' } })}
+        >
+          {item.authorName}
+        </AppLink>
+        <p className={clsx(thStyle, css({ fontSize: '0.8rem', lg: { fontSize: '1rem' } }))}>
           <ReplyIcon
             className={css({
-              w: '16px',
-              h: '16px',
+              w: '0.8rem',
+              h: '0.8rem',
               display: 'inline-block',
               mr: '0.2rem',
               lg: { display: 'none', mr: '0' },
@@ -77,7 +77,7 @@ const TopicList: FC<{
         <time
           className={clsx(
             thStyle,
-            css({ fontSize: '0.9rem', textAlign: 'end', lg: { fontSize: '1rem' } }),
+            css({ fontSize: '0.8rem', textAlign: 'end', lg: { fontSize: '1rem' } }),
           )}
         >
           {new Date(Number(item.lastReplyTime!) * 1000).toLocaleString(...localeArgs)}

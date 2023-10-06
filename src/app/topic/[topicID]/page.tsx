@@ -115,6 +115,7 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
                   fontSize: '0.875rem',
                   color: '#666',
                   lg: { w: '30rem' },
+                  whiteSpace: 'pre-wrap',
                 })}
               >
                 {item.quotingText}
@@ -150,7 +151,7 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
               </Link>
             )}
             <section
-              className={css({ mb: '1.5rem' })}
+              className={css({ mb: '1.5rem', whiteSpace: 'pre-wrap' })}
               dangerouslySetInnerHTML={{ __html: processHTML(item.content!) }}
             />
           </article>
