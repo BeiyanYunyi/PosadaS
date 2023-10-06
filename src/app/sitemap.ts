@@ -8,8 +8,6 @@ const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
   });
   return topics.map((topic) => ({
     url: `${process.env.SERVE_URL}/topic/${topic.topicID}`,
-    lastModified: topic.lastReplyTime ? new Date(Number(topic.lastReplyTime) * 1000) : new Date(),
-    changeFrequency: 'weekly',
   }));
 };
 
