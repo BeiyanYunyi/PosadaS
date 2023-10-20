@@ -5,3 +5,16 @@
     color-scheme: dark;
   }
 }
+
+@keyframes strongify {
+  0% {
+    background-color: rgba(250, 204, 21, 0.4);
+  }
+  100% {
+    background-color: none;
+  }
+}
+
+:target {
+  animation: 1s ease-in 1 strongify;
+}
