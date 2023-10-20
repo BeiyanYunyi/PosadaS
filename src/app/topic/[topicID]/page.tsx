@@ -6,7 +6,7 @@ import Random from '@/app/components/Random';
 import prisma from '@/app/utils/database';
 import isUUID from '@/app/utils/isUUID';
 import localeArgs from '@/app/utils/localeArgs';
-import processHTML from '@/app/utils/processHTML';
+import parseHTML from '@/app/utils/parseHTML';
 import { css } from '@styles/css';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -76,10 +76,7 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
               {new Date(Number(topic.createTime!) * 1000).toLocaleString(...localeArgs)}
             </span>
           </h4>
-          <section
-            className={css({ mb: '1.5rem' })}
-            dangerouslySetInnerHTML={{ __html: processHTML(topic.content!) }}
-          />
+          <section className={css({ mb: '1.5rem' })}>{parseHTML(topic.content!)}</section>
         </article>
         {contents.map((item) => (
           <article key={item.replyID}>
@@ -150,10 +147,9 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
                 />
               </Link>
             )}
-            <section
-              className={css({ mb: '1.5rem', whiteSpace: 'pre-wrap' })}
-              dangerouslySetInnerHTML={{ __html: processHTML(item.content!) }}
-            />
+            <section className={css({ mb: '1.5rem', whiteSpace: 'pre-wrap' })}>
+              {parseHTML(item.content!)}
+            </section>
           </article>
         ))}
       </div>
