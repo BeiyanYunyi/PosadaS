@@ -79,7 +79,7 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
           <section className={css({ mb: '1.5rem' })}>{parseHTML(topic.content!)}</section>
         </article>
         {contents.map((item) => (
-          <article key={item.replyID}>
+          <article key={item.replyID} id={item.replyID}>
             <h4
               className={css({
                 fontStyle: 'inherit',

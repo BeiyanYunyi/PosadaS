@@ -23,7 +23,7 @@ const liStyle = css({
     width: '100%',
     margin: '0 auto',
     left: '0',
-    borderBottom: '2px dashed #eee',
+    borderBottom: '1px dashed #dddddd',
   },
 });
 

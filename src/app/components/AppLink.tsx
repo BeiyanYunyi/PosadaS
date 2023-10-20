@@ -5,16 +5,23 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { FC } from 'react';
 
-const AppLink: FC<React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }> = (props) => {
-  const { className: outerClass, ...otherProp } = props;
+const AppLink: FC<
+  // eslint-disable-next-line react/require-default-props
+  React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string; activated?: boolean }
+> = (props) => {
+  const { className: outerClass, activated, ...otherProp } = props;
   return (
     <Link
       {...otherProp}
       className={clsx(
         outerClass,
         css({
-          color: '#37a',
-          _hover: { color: 'white', background: '#37a' },
+          color: activated ? 'white' : '#37a',
+          background: activated ? '#83BF73' : undefined,
+          _hover: {
+            color: activated ? '37a' : 'white',
+            background: activated ? undefined : '#37a',
+          },
         }),
       )}
     >
@@ -22,4 +29,5 @@ const AppLink: FC<React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string
     </Link>
   );
 };
+
 export default AppLink;

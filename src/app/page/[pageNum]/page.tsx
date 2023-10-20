@@ -29,7 +29,7 @@ const Page = async ({ params }: { params: { pageNum: string } }) => {
       <TopicList content={content} />
       <div>
         {Array.from({ length: count }, (_, i) => i + 1).map((item) => (
-          <AppLink href={`/page/${item}`} key={item}>
+          <AppLink href={`/page/${item}`} key={item} activated={Number(params.pageNum) === item}>
             {item}
           </AppLink>
         ))}
