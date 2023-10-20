@@ -38,8 +38,8 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
   return (
     <>
       <Random />
-      <div className={css({ w: 'full' })}>
-        <article>
+      <article className={css({ w: 'full' })}>
+        <section>
           <h1
             className={css({
               mt: '1rem',
@@ -77,9 +77,9 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
             </span>
           </h4>
           <section className={css({ mb: '1.5rem' })}>{parseHTML(topic.content!)}</section>
-        </article>
+        </section>
         {contents.map((item) => (
-          <article key={item.replyID} id={item.replyID}>
+          <section key={item.replyID} id={item.replyID} className={css({ mb: '0.5rem' })}>
             <h4
               className={css({
                 fontStyle: 'inherit',
@@ -103,7 +103,7 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
               </span>
             </h4>
             {item.quoting && (
-              <section
+              <div
                 className={css({
                   borderLeft: '2px solid #ddd',
                   my: '20px',
@@ -122,7 +122,7 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
                 >
                   {item.quotingAuthorName}
                 </AppLink>
-              </section>
+              </div>
             )}
             {item.image && (
               <Link
@@ -147,12 +147,17 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
                 />
               </Link>
             )}
-            <section className={css({ mb: '1.5rem', whiteSpace: 'pre-wrap' })}>
+            <div className={css({ mb: '0.5rem', whiteSpace: 'pre-wrap' })}>
               {parseHTML(item.content!)}
-            </section>
-          </article>
+            </div>
+            {!!item.votes && (
+              <div className={css({ fontSize: '0.875rem', color: '#aaa', textAlign: 'right' })}>
+                赞 ({item.votes})
+              </div>
+            )}
+          </section>
         ))}
-      </div>
+      </article>
     </>
   );
 };
