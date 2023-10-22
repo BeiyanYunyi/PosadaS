@@ -12,7 +12,7 @@ export const metadata = {
 
 export default ({ children }: { children: React.ReactNode }) => (
   <html lang="en" className={css({ maxW: '1280px', mx: 'auto', overflowX: 'hidden' })}>
-    <body className={css({ fontFamily: 'mono' })}>
+    <body className={css({ fontFamily: 'sans' })}>
       <main
         className={css({
           display: 'flex',
@@ -22,7 +22,6 @@ export default ({ children }: { children: React.ReactNode }) => (
           padding: '1rem',
           lg: { padding: '6rem' },
           minHeight: '100vh',
-          fontFamily: 'sans',
         })}
       >
         {children}

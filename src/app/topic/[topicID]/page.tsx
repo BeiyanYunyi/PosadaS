@@ -76,7 +76,7 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
               {new Date(Number(topic.createTime!) * 1000).toLocaleString(...localeArgs)}
             </span>
           </h4>
-          <section className={css({ mb: '1.5rem' })}>{parseHTML(topic.content!)}</section>
+          <div className={css({ mb: '1.5rem' })}>{parseHTML(topic.content!)}</div>
         </section>
         {contents.map((item) => (
           <section key={item.replyID} id={item.replyID} className={css({ mb: '0.5rem' })}>
@@ -150,11 +150,9 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
             <div className={css({ mb: '0.5rem', whiteSpace: 'pre-wrap' })}>
               {parseHTML(item.content!)}
             </div>
-            {!!item.votes && (
-              <div className={css({ fontSize: '0.875rem', color: '#aaa', textAlign: 'right' })}>
-                赞 ({item.votes})
-              </div>
-            )}
+            <div className={css({ fontSize: '0.875rem', color: '#aaa', textAlign: 'right' })}>
+              赞 {!!item.votes && <>({item.votes})</>}
+            </div>
           </section>
         ))}
       </article>
