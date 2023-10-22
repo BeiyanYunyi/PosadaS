@@ -4,7 +4,9 @@ import prisma from '@/app/utils/database';
 
 export const generateStaticParams = async () => {
   const count = Math.round((await prisma.topicList.count()) / 100);
-  return Array.from({ length: count }, (_, i) => i + 1);
+  return Array.from({ length: count }, (_, i) => i + 1).map((item) => ({
+    pageNum: item.toString(),
+  }));
 };
 
 const Page = async ({ params }: { params: { pageNum: string } }) => {

@@ -29,6 +29,43 @@ export const generateMetadata = async ({ params }: { params: { topicID: string }
   };
 };
 
+const articleClass = css({ w: 'full' });
+const h1Class = css({
+  mt: '1rem',
+  fontSize: '1.625rem',
+  color: '#494949',
+  fontWeight: 'bold',
+  p: '0 0 15px 0',
+  lineHeight: '1.1',
+});
+const h4Class = css({
+  fontStyle: 'inherit',
+  backgroundColor: '#f0f6f3',
+  color: '#666',
+  fontSize: '0.8125rem',
+  lineHeight: '1.25rem',
+  mb: '1rem',
+});
+const quotingClass = css({
+  borderLeft: '2px solid #ddd',
+  my: '20px',
+  pl: '7px',
+  position: 'relative',
+  fontSize: '0.875rem',
+  color: '#666',
+  lg: { w: '30rem' },
+  whiteSpace: 'pre-wrap',
+});
+const imgContainerClass = css({
+  display: 'block',
+  position: 'relative',
+  h: '30rem',
+  w: 'full',
+  lg: {
+    w: '30rem',
+  },
+});
+
 const Page = async ({ params }: { params: { topicID: string } }) => {
   const [topic, contents] = await Promise.all([
     prisma.topicList.findUnique({ where: { topicID: params.topicID } }),
@@ -38,30 +75,10 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
   return (
     <>
       <Random />
-      <article className={css({ w: 'full' })}>
+      <article className={articleClass}>
         <section>
-          <h1
-            className={css({
-              mt: '1rem',
-              fontSize: '1.625rem',
-              color: '#494949',
-              fontWeight: 'bold',
-              p: '0 0 15px 0',
-              lineHeight: '1.1',
-            })}
-          >
-            {topic.title}
-          </h1>
-          <h4
-            className={css({
-              fontStyle: 'inherit',
-              backgroundColor: '#f0f6f3',
-              color: '#666',
-              fontSize: '0.8125rem',
-              lineHeight: '1.25rem',
-              mb: '1rem',
-            })}
-          >
+          <h1 className={h1Class}>{topic.title}</h1>
+          <h4 className={h4Class}>
             {topic.isElite && <EliteTag />}
             {isUUID(topic.topicID) && <OriginalTag />}
             {!isUUID(topic.topicID) && !!topic.deleteTime && <DeletedTag />}
@@ -80,16 +97,7 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
         </section>
         {contents.map((item) => (
           <section key={item.replyID} id={item.replyID} className={css({ mb: '0.5rem' })}>
-            <h4
-              className={css({
-                fontStyle: 'inherit',
-                backgroundColor: '#f0f6f3',
-                color: '#666',
-                fontSize: '0.8125rem',
-                lineHeight: '1.25rem',
-                mb: '1rem',
-              })}
-            >
+            <h4 className={h4Class}>
               {isUUID(item.replyID) && <OriginalTag />}
               <AppLink href={`https://www.douban.com/people/${item.authorID}`}>
                 {item.authorName}
@@ -103,18 +111,7 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
               </span>
             </h4>
             {item.quoting && (
-              <div
-                className={css({
-                  borderLeft: '2px solid #ddd',
-                  my: '20px',
-                  pl: '7px',
-                  position: 'relative',
-                  fontSize: '0.875rem',
-                  color: '#666',
-                  lg: { w: '30rem' },
-                  whiteSpace: 'pre-wrap',
-                })}
-              >
+              <div className={quotingClass}>
                 {item.quotingText}
                 <AppLink
                   href={`https://www.douban.com/people/${item.quotingAuthorID}`}
@@ -125,19 +122,7 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
               </div>
             )}
             {item.image && (
-              <Link
-                referrerPolicy="no-referrer"
-                href={item.image}
-                className={css({
-                  display: 'block',
-                  position: 'relative',
-                  h: '30rem',
-                  w: 'full',
-                  lg: {
-                    w: '30rem',
-                  },
-                })}
-              >
+              <Link rel="noopener noreferrer" href={item.image} className={imgContainerClass}>
                 <Image
                   className={css({ objectFit: 'contain' })}
                   fill
