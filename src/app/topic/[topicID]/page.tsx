@@ -122,7 +122,12 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
               </div>
             )}
             {item.image && (
-              <Link rel="noopener noreferrer" href={item.image} className={imgContainerClass}>
+              <Link
+                rel="noopener noreferrer"
+                target="_blank"
+                href={item.image}
+                className={imgContainerClass}
+              >
                 <Image
                   className={css({ objectFit: 'contain' })}
                   fill
