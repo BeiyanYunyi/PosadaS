@@ -36,9 +36,11 @@ export default ({ children }: { children: React.ReactNode }) => (
           fontSize: '0.8125rem',
         })}
       >
-        © 2020－2023 Posadas Group, all rights <strong>reversed</strong> 阿根廷波萨达斯科技有限公司
+        © 2020－2023 <AppLink href="https://band.us/band/86180635">Posadas Group</AppLink>, all
+        rights <strong>reversed</strong> 贴吧-豆瓣-
+        <AppLink href="https://band.us/band/86180635">BAND 波萨达斯学派</AppLink>
         <br />
-        备份于豆瓣小组“后启示录地下避难所” · 内容版权归原作者所有 · 代码以 AGPL 协议
+        备份于豆瓣小组“后启示录地下避难所” · 内容若存在版权，归原作者所有 · 代码以 AGPL 协议
         <AppLink href="https://github.com/BeiyanYunyi/PosadaS">开源</AppLink> ·{' '}
         <Link href="https://github.com/BeiyanYunyi/PosadaS" className={css({ display: 'inline' })}>
           <GitHubIcon className={css({ display: 'inline' })} />
