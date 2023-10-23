@@ -8,9 +8,9 @@ import isUUID from '@/app/utils/isUUID';
 import localeArgs from '@/app/utils/localeArgs';
 import parseHTML from '@/app/utils/parseHTML';
 import { css } from '@styles/css';
-import Image from 'next/image';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import Reply from './Reply';
+import { h4Class } from './styles';
 
 // export const generateStaticParams = async () => {
 //   const topics = await prisma.topicList.findMany({ select: { topicID: true } });
@@ -37,33 +37,6 @@ const h1Class = css({
   fontWeight: 'bold',
   p: '0 0 15px 0',
   lineHeight: '1.1',
-});
-const h4Class = css({
-  fontStyle: 'inherit',
-  backgroundColor: '#f0f6f3',
-  color: '#666',
-  fontSize: '0.8125rem',
-  lineHeight: '1.25rem',
-  mb: '1rem',
-});
-const quotingClass = css({
-  borderLeft: '2px solid #ddd',
-  my: '20px',
-  pl: '7px',
-  position: 'relative',
-  fontSize: '0.875rem',
-  color: '#666',
-  lg: { w: '30rem' },
-  whiteSpace: 'pre-wrap',
-});
-const imgContainerClass = css({
-  display: 'block',
-  position: 'relative',
-  h: '30rem',
-  w: 'full',
-  lg: {
-    w: '30rem',
-  },
 });
 
 const Page = async ({ params }: { params: { topicID: string } }) => {
@@ -96,54 +69,7 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
           <div className={css({ mb: '1.5rem' })}>{parseHTML(topic.content!)}</div>
         </section>
         {contents.map((item) => (
-          <section key={item.replyID} id={item.replyID} className={css({ mb: '0.5rem' })}>
-            <h4 className={h4Class}>
-              {isUUID(item.replyID) && <OriginalTag />}
-              <AppLink href={`https://www.douban.com/people/${item.authorID}`}>
-                {item.authorName}
-              </AppLink>
-              <span
-                className={css({
-                  mx: '1rem',
-                })}
-              >
-                {new Date(Number(item.replyTime!) * 1000).toLocaleString(...localeArgs)}
-              </span>
-            </h4>
-            {item.quoting && (
-              <div className={quotingClass}>
-                {item.quotingText}
-                <AppLink
-                  href={`https://www.douban.com/people/${item.quotingAuthorID}`}
-                  className={css({ ml: '0.625rem' })}
-                >
-                  {item.quotingAuthorName}
-                </AppLink>
-              </div>
-            )}
-            {item.image && (
-              <Link
-                rel="noopener noreferrer"
-                target="_blank"
-                href={item.image}
-                className={imgContainerClass}
-              >
-                <Image
-                  className={css({ objectFit: 'contain' })}
-                  fill
-                  referrerPolicy="no-referrer"
-                  alt="reply"
-                  src={item.image}
-                />
-              </Link>
-            )}
-            <div className={css({ mb: '0.5rem', whiteSpace: 'pre-wrap' })}>
-              {parseHTML(item.content!)}
-            </div>
-            <div className={css({ fontSize: '0.875rem', color: '#aaa', textAlign: 'right' })}>
-              赞 {!!item.votes && <>({item.votes})</>}
-            </div>
-          </section>
+          <Reply key={item.replyID} reply={item} isAuthor={topic.authorID === item.authorID} />
         ))}
       </article>
     </>
