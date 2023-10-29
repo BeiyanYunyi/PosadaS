@@ -8,5 +8,7 @@ export const GET = async (_request: Request, { params }: { params: { imgID: stri
     select: { imgContent: true },
   });
   if (!img) notFound();
-  return new Response(img.imgContent);
+  return new Response(img.imgContent, {
+    headers: { 'Content-Type': 'image/jpeg' },
+  });
 };
