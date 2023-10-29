@@ -18,9 +18,9 @@ model dbVersion {
 }
 
 model image {
-  id         BigInt  @id @default(autoincrement())
-  imgID      String? @unique(map: "image_imgid_unique") @db.VarChar(255)
-  imgContent Bytes?
+  id         BigInt @id @default(autoincrement())
+  imgID      String @unique(map: "image_imgid_unique") @db.VarChar(255)
+  imgContent Bytes
 
   @@index([imgID], map: "image_img_i_d")
   @@index([imgID], map: "image_imgid_index")

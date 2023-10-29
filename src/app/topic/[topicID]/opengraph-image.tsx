@@ -1,7 +1,7 @@
 import prisma from '@/app/utils/database';
 import { readFile } from 'fs/promises';
 import { notFound } from 'next/navigation';
-import { ImageResponse } from 'next/server';
+import { ImageResponse } from 'next/og';
 
 export const size = {
   width: 1200,

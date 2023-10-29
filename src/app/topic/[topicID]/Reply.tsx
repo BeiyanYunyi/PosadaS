@@ -1,3 +1,4 @@
+import AppImage from '@/app/components/AppImage';
 import AppLink from '@/app/components/AppLink';
 import AuthorTag from '@/app/components/AuthorTag';
 import OriginalTag from '@/app/components/OriginalTag';
@@ -5,8 +6,6 @@ import isUUID from '@/app/utils/isUUID';
 import localeArgs from '@/app/utils/localeArgs';
 import parseHTML from '@/app/utils/parseHTML';
 import { css } from '@styles/css';
-import Image from 'next/image';
-import Link from 'next/link';
 import { FC } from 'react';
 import { h4Class } from './styles';
 
@@ -19,15 +18,6 @@ const quotingClass = css({
   color: '#666',
   lg: { w: '30rem' },
   whiteSpace: 'pre-wrap',
-});
-const imgContainerClass = css({
-  display: 'block',
-  position: 'relative',
-  h: '30rem',
-  w: 'full',
-  lg: {
-    w: '30rem',
-  },
 });
 
 const Reply: FC<{
@@ -73,22 +63,7 @@ const Reply: FC<{
         </AppLink>
       </div>
     )}
-    {reply.image && (
-      <Link
-        rel="noopener noreferrer"
-        target="_blank"
-        href={reply.image}
-        className={imgContainerClass}
-      >
-        <Image
-          className={css({ objectFit: 'contain' })}
-          fill
-          referrerPolicy="no-referrer"
-          alt="reply"
-          src={reply.image}
-        />
-      </Link>
-    )}
+    {reply.image && <AppImage src={reply.image} />}
     <div className={css({ mb: '0.5rem', whiteSpace: 'pre-wrap' })}>{parseHTML(reply.content!)}</div>
     <div className={css({ fontSize: '0.875rem', color: '#aaa', textAlign: 'right' })}>
       赞 {!!reply.votes && <>({reply.votes})</>}
