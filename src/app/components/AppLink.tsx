@@ -19,7 +19,7 @@ const AppLink: FC<
           color: activated ? 'white' : '#37a',
           background: activated ? '#83BF73' : undefined,
           _hover: {
-            color: activated ? '37a' : 'white',
+            color: activated ? '#37a' : 'white',
             background: activated ? undefined : '#37a',
           },
         }),
