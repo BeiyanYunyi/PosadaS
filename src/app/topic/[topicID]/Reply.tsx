@@ -54,7 +54,7 @@ const Reply: FC<{
     </h4>
     {reply.quoting && (
       <div className={quotingClass}>
-        {reply.quotingText}
+        {reply.quotingText && parseHTML(reply.quotingText)}
         <AppLink
           href={`https://www.douban.com/people/${reply.quotingAuthorID}`}
           className={css({ ml: '0.625rem' })}
