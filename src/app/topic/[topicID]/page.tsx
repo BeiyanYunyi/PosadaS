@@ -1,6 +1,7 @@
 import AppLink from '@/app/components/AppLink';
 import DeletedTag from '@/app/components/DeletedTag';
 import EliteTag from '@/app/components/EliteTag';
+import Loading from '@/app/components/Loading';
 import OriginalTag from '@/app/components/OriginalTag';
 import Random from '@/app/components/Random';
 import prisma from '@/app/utils/database';
@@ -9,6 +10,7 @@ import localeArgs from '@/app/utils/localeArgs';
 import parseHTML from '@/app/utils/parseHTML';
 import { css } from '@styles/css';
 import { notFound } from 'next/navigation';
+import { FC, Suspense } from 'react';
 import Reply from './Reply';
 import { h4Class } from './styles';
 
@@ -29,7 +31,7 @@ export const generateMetadata = async ({ params }: { params: { topicID: string }
   };
 };
 
-const articleClass = css({ w: 'full' });
+const articleClass = css({ w: 'full', flexGrow: 1 });
 const h1Class = css({
   mt: '1rem',
   fontSize: '1.625rem',
@@ -39,11 +41,22 @@ const h1Class = css({
   lineHeight: '1.1',
 });
 
+const Replies: FC<{ topicID: string; authorID: string | null }> = async ({ topicID, authorID }) => {
+  const contents = await prisma.reply.findMany({
+    where: { topicID },
+    orderBy: { replyTime: 'asc' },
+  });
+  return (
+    <>
+      {contents.map((item) => (
+        <Reply key={item.replyID} reply={item} isAuthor={authorID === item.authorID} />
+      ))}
+    </>
+  );
+};
+
 const Page = async ({ params }: { params: { topicID: string } }) => {
-  const [topic, contents] = await Promise.all([
-    prisma.topicList.findUnique({ where: { topicID: params.topicID } }),
-    prisma.reply.findMany({ where: { topicID: params.topicID }, orderBy: { replyTime: 'asc' } }),
-  ]);
+  const topic = await prisma.topicList.findUnique({ where: { topicID: params.topicID } });
   if (!topic) notFound();
   return (
     <>
@@ -67,10 +80,10 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
             </span>
           </h4>
           <div className={css({ mb: '1.5rem' })}>{parseHTML(topic.content!)}</div>
+          <Suspense fallback={<Loading />}>
+            <Replies topicID={params.topicID} authorID={topic.authorID} />
+          </Suspense>
         </section>
-        {contents.map((item) => (
-          <Reply key={item.replyID} reply={item} isAuthor={topic.authorID === item.authorID} />
-        ))}
       </article>
     </>
   );

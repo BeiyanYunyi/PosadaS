@@ -1,6 +1,5 @@
-import Link from 'next/link';
 import prisma from '../utils/database';
-import Loading from './Loading';
+import AppLink from './AppLink';
 
 const Random = async () => {
   const count = await prisma.topicList.count();
@@ -9,11 +8,7 @@ const Random = async () => {
     skip: Math.floor(Math.random() * count),
     take: 1,
   });
-  return (
-    <Link href={`/topic/${target[0].topicID}`}>
-      <Loading />
-    </Link>
-  );
+  return <AppLink href={`/topic/${target[0].topicID}`}>随便看看</AppLink>;
 };
 
 export default Random;
