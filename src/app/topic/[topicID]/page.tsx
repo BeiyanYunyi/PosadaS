@@ -1,7 +1,6 @@
 import AppLink from '@/app/components/AppLink';
 import DeletedTag from '@/app/components/DeletedTag';
 import EliteTag from '@/app/components/EliteTag';
-import Loading from '@/app/components/Loading';
 import OriginalTag from '@/app/components/OriginalTag';
 import Random from '@/app/components/Random';
 import prisma from '@/app/utils/database';
@@ -10,7 +9,8 @@ import localeArgs from '@/app/utils/localeArgs';
 import parseHTML from '@/app/utils/parseHTML';
 import { css } from '@styles/css';
 import { notFound } from 'next/navigation';
-import { FC, Suspense } from 'react';
+import { FC } from 'react';
+import type { DiscussionForumPosting, WithContext } from 'schema-dts';
 import Reply from './Reply';
 import { h4Class } from './styles';
 
@@ -41,23 +41,65 @@ const h1Class = css({
   lineHeight: '1.1',
 });
 
-const Replies: FC<{ topicID: string; authorID: string | null }> = async ({ topicID, authorID }) => {
-  const contents = await prisma.reply.findMany({
-    where: { topicID },
-    orderBy: { replyTime: 'asc' },
-  });
-  return (
-    <>
-      {contents.map((item) => (
-        <Reply key={item.replyID} reply={item} isAuthor={authorID === item.authorID} />
-      ))}
-    </>
-  );
-};
+const Replies: FC<{
+  contents: {
+    replyID: string;
+    topicID: string | null;
+    authorID: string | null;
+    authorName: string | null;
+    isPoster: boolean | null;
+    replyTime: bigint | null;
+    content: string | null;
+    image: string | null;
+    quoting: boolean | null;
+    quotingImage: string | null;
+    quotingText: string | null;
+    quotingAuthorID: string | null;
+    quotingAuthorName: string | null;
+    votes: number | null;
+  }[];
+  authorID: string | null;
+}> = async ({ contents, authorID }) => (
+  <>
+    {contents.map((item) => (
+      <Reply key={item.replyID} reply={item} isAuthor={authorID === item.authorID} />
+    ))}
+  </>
+);
 
 const Page = async ({ params }: { params: { topicID: string } }) => {
-  const topic = await prisma.topicList.findUnique({ where: { topicID: params.topicID } });
+  const [topic, reply] = await Promise.all([
+    prisma.topicList.findUnique({ where: { topicID: params.topicID } }),
+    prisma.reply.findMany({
+      where: { topicID: params.topicID },
+      orderBy: { replyTime: 'asc' },
+    }),
+  ]);
   if (!topic) notFound();
+  const jsonLd: WithContext<DiscussionForumPosting> = {
+    '@context': 'https://schema.org',
+    '@type': 'DiscussionForumPosting',
+    headline: topic.title!,
+    text: topic.content!.replace(/<[^>]+>/g, ''),
+    author: {
+      '@type': 'Person',
+      name: topic.authorName!,
+      url: `https://www.douban.com/people/${topic.authorID}`,
+    },
+    url: `${process.env.SERVE_URL}/topic/${topic.topicID}`,
+    datePublished: new Date(Number(topic.createTime) * 1000).toISOString(),
+    commentCount: reply.length,
+    comment: reply.map((item) => ({
+      '@type': 'Comment',
+      author: {
+        '@type': 'Person',
+        name: item.authorName!,
+        url: `https://www.douban.com/people/${item.authorID}`,
+      },
+      text: item.content!.replace(/<[^>]+>/g, ''),
+      datePublished: new Date(Number(item.replyTime!) * 1000).toISOString(),
+    })),
+  };
   return (
     <>
       <Random />
@@ -80,11 +122,13 @@ const Page = async ({ params }: { params: { topicID: string } }) => {
             </span>
           </h4>
           <div className={css({ mb: '1.5rem' })}>{parseHTML(topic.content!)}</div>
-          <Suspense fallback={<Loading />}>
-            <Replies topicID={params.topicID} authorID={topic.authorID} />
-          </Suspense>
+          <Replies contents={reply} authorID={topic.authorID} />
         </section>
       </article>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     </>
   );
 };

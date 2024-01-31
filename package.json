@@ -10,7 +10,7 @@
     "start": "next start",
     "lint": "next lint"
   },
-  "packageManager": "pnpm@8.12.1",
+  "packageManager": "pnpm@8.15.1",
   "dependencies": {
     "@prisma/client": "5.8.1",
     "@types/node": "20.11.5",
@@ -39,7 +39,8 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsx-a11y": "^6.8.0",
     "eslint-plugin-react": "^7.33.2",
-    "prettier": "^3.2.4"
+    "prettier": "^3.2.4",
+    "schema-dts": "^1.1.2"
   },
   "pnpm": {
     "overrides": {
