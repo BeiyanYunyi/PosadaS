@@ -1,4 +1,5 @@
 import schemaName from '@/app/utils/schemaName';
+import { relations } from 'drizzle-orm';
 import {
   bigint,
   bigserial,
@@ -92,6 +93,12 @@ export const topicList = schema.table(
     topicListLastReplyTime: index('topic_list_last_reply_time').on(table.lastReplyTime),
   }),
 );
+
+export const topicListRelations = relations(topicList, ({ many }) => ({ replies: many(reply) }));
+
+export const replyRelations = relations(reply, ({ one }) => ({
+  topic: one(topicList, { fields: [reply.topicId], references: [topicList.topicId] }),
+}));
 
 export const user = schema.table(
   'user',

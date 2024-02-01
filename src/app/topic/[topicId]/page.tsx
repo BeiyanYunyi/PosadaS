@@ -1,6 +1,7 @@
 import AppLink from '@/app/components/AppLink';
 import DeletedTag from '@/app/components/DeletedTag';
 import EliteTag from '@/app/components/EliteTag';
+import Loading from '@/app/components/Loading';
 import OriginalTag from '@/app/components/OriginalTag';
 import Random from '@/app/components/Random';
 import { db } from '@/app/utils/database';
@@ -11,7 +12,7 @@ import { reply as dbReply, topicList } from '@drizzle/schema/schema';
 import { css } from '@styles/css';
 import { asc, eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
-import { FC } from 'react';
+import { FC, Suspense } from 'react';
 import type { DiscussionForumPosting, WithContext } from 'schema-dts';
 import Reply from './Reply';
 import { h4Class } from './styles';
@@ -44,40 +45,29 @@ const h1Class = css({
 });
 
 const Replies: FC<{
-  contents: {
-    replyId: string;
-    topicId: string | null;
-    authorId: string | null;
-    authorName: string | null;
-    isPoster: boolean | null;
-    replyTime: number | null;
-    content: string | null;
-    image: string | null;
-    quoting: boolean | null;
-    quotingImage: string | null;
-    quotingText: string | null;
-    quotingAuthorId: string | null;
-    quotingAuthorName: string | null;
-    votes: number | null;
-  }[];
-  authorID: string | null;
-}> = async ({ contents, authorID }) => (
-  <>
-    {contents.map((item) => (
-      <Reply key={item.replyId} reply={item} isAuthor={authorID === item.authorId} />
-    ))}
-  </>
-);
+  topicId: string;
+  authorId: string | null;
+}> = async ({ topicId, authorId }) => {
+  const contents = await db.query.reply.findMany({
+    where: eq(dbReply.topicId, topicId),
+    orderBy: asc(dbReply.replyTime),
+  });
+  return (
+    <>
+      {contents.map((item) => (
+        <Reply key={item.replyId} reply={item} isAuthor={authorId === item.authorId} />
+      ))}
+    </>
+  );
+};
 
 const Page = async ({ params }: { params: { topicId: string } }) => {
-  const [topic, reply] = await Promise.all([
-    db.query.topicList.findFirst({ where: eq(topicList.topicId, params.topicId) }),
-    db.query.reply.findMany({
-      where: eq(dbReply.topicId, params.topicId),
-      orderBy: asc(dbReply.replyTime),
-    }),
-  ]);
+  const topic = await db.query.topicList.findFirst({
+    where: eq(topicList.topicId, params.topicId),
+    with: { replies: { columns: { replyId: true } } },
+  });
   if (!topic) notFound();
+
   const jsonLd: WithContext<DiscussionForumPosting> = {
     '@context': 'https://schema.org',
     '@type': 'DiscussionForumPosting',
@@ -90,17 +80,8 @@ const Page = async ({ params }: { params: { topicId: string } }) => {
     },
     url: `${process.env.SERVE_URL}/topic/${topic.topicId}`,
     datePublished: new Date(Number(topic.createTime) * 1000).toISOString(),
-    commentCount: reply.length,
-    comment: reply.map((item) => ({
-      '@type': 'Comment',
-      author: {
-        '@type': 'Person',
-        name: item.authorName!,
-        url: `https://www.douban.com/people/${item.authorId}`,
-      },
-      text: item.content!.replace(/<[^>]+>/g, ''),
-      datePublished: new Date(Number(item.replyTime!) * 1000).toISOString(),
-    })),
+    commentCount: topic.replies.length,
+    comment: { '@id': `${process.env.SERVE_URL}/api/replies/${topic.topicId}` },
   };
   return (
     <>
@@ -124,7 +105,9 @@ const Page = async ({ params }: { params: { topicId: string } }) => {
             </span>
           </h4>
           <div className={css({ mb: '1.5rem' })}>{parseHTML(topic.content!)}</div>
-          <Replies contents={reply} authorID={topic.authorId} />
+          <Suspense fallback={<Loading />}>
+            <Replies topicId={params.topicId} authorId={topic.authorId} />
+          </Suspense>
         </section>
       </article>
       <script

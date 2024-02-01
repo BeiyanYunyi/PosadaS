@@ -7,22 +7,20 @@ import TopicList from './components/TopicList';
 import { db } from './utils/database';
 
 const Home = async () => {
-  const content = await db.query.topicList
-    .findMany({
-      columns: {
-        title: true,
-        topicId: true,
-        lastReplyTime: true,
-        isElite: true,
-        deleteTime: true,
-        authorName: true,
-        reply: true,
-        authorId: true,
-      },
-      orderBy: desc(topicList.lastReplyTime),
-      limit: 100,
-    })
-    .execute();
+  const content = await db.query.topicList.findMany({
+    columns: {
+      title: true,
+      topicId: true,
+      lastReplyTime: true,
+      isElite: true,
+      deleteTime: true,
+      authorName: true,
+      reply: true,
+      authorId: true,
+    },
+    orderBy: desc(topicList.lastReplyTime),
+    limit: 100,
+  });
   return (
     <>
       <Random />
