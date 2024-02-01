@@ -81,7 +81,10 @@ const Page = async ({ params }: { params: { topicId: string } }) => {
     url: `${process.env.SERVE_URL}/topic/${topic.topicId}`,
     datePublished: new Date(Number(topic.createTime) * 1000).toISOString(),
     commentCount: topic.replies.length,
-    comment: { '@id': `${process.env.SERVE_URL}/api/replies/${topic.topicId}` },
+    comment: topic.replies.map((item) => ({
+      '@id': `${process.env.SERVE_URL}/api/reply/${item.replyId}`,
+      url: `${process.env.SERVE_URL}/api/reply/${item.replyId}`,
+    })),
   };
   return (
     <>
