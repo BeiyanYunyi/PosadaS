@@ -64,7 +64,17 @@ const Replies: FC<{
 const Page = async ({ params }: { params: { topicId: string } }) => {
   const topic = await db.query.topicList.findFirst({
     where: eq(topicList.topicId, params.topicId),
-    with: { replies: { columns: { replyId: true } } },
+    with: {
+      replies: {
+        columns: {
+          replyId: true,
+          content: true,
+          authorId: true,
+          authorName: true,
+          replyTime: true,
+        },
+      },
+    },
   });
   if (!topic) notFound();
 
@@ -82,8 +92,15 @@ const Page = async ({ params }: { params: { topicId: string } }) => {
     datePublished: new Date(Number(topic.createTime) * 1000).toISOString(),
     commentCount: topic.replies.length,
     comment: topic.replies.map((item) => ({
-      '@id': `${process.env.SERVE_URL}/api/reply/${item.replyId}`,
-      url: `${process.env.SERVE_URL}/api/reply/${item.replyId}`,
+      '@context': 'https://schema.org',
+      '@type': 'Comment',
+      author: {
+        '@type': 'Person',
+        name: item.authorName!,
+        url: `https://www.douban.com/people/${item.authorId}`,
+      },
+      text: item.content!.replace(/<[^>]+>/g, ''),
+      datePublished: new Date(item.replyTime! * 1000).toISOString(),
     })),
   };
   return (
