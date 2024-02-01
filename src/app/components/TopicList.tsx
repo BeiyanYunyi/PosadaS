@@ -32,13 +32,13 @@ const thStyle = css({ color: '#666' });
 const TopicList: FC<{
   content: {
     title: string | null;
-    authorID: string | null;
+    authorId: string | null;
     authorName: string | null;
     reply: number | null;
-    lastReplyTime: bigint | null;
-    topicID: string;
+    lastReplyTime: number | null;
+    topicId: string;
     isElite: boolean | null;
-    deleteTime: bigint | null;
+    deleteTime: number | null;
   }[];
 }> = ({ content }) => (
   <ul className={css({ w: '100%' })}>
@@ -49,15 +49,15 @@ const TopicList: FC<{
       <span className={clsx(thStyle, css({ textAlign: 'center' }))}>最后回应</span>
     </li>
     {content.map((item) => (
-      <li key={item.topicID} className={liStyle}>
+      <li key={item.topicId} className={liStyle}>
         <div className={css({ gridColumn: 3, lg: { gridColumn: 1 } })}>
           {item.isElite && <EliteTag />}
-          {isUUID(item.topicID) && <OriginalTag />}
-          {!isUUID(item.topicID) && !!item.deleteTime && <DeletedTag />}
-          <AppLink href={`/topic/${item.topicID}`}>{item.title}</AppLink>
+          {isUUID(item.topicId) && <OriginalTag />}
+          {!isUUID(item.topicId) && !!item.deleteTime && <DeletedTag />}
+          <AppLink href={`/topic/${item.topicId}`}>{item.title}</AppLink>
         </div>
         <AppLink
-          href={`https://www.douban.com/people/${item.authorID}`}
+          href={`https://www.douban.com/people/${item.authorId}`}
           className={css({ fontSize: '0.8rem', w: 'fit-content', lg: { fontSize: '1rem' } })}
         >
           {item.authorName}
@@ -80,7 +80,7 @@ const TopicList: FC<{
             css({ fontSize: '0.8rem', textAlign: 'end', lg: { fontSize: '1rem' } }),
           )}
         >
-          {new Date(Number(item.lastReplyTime!) * 1000).toLocaleString(...localeArgs)}
+          {new Date(item.lastReplyTime! * 1000).toLocaleString(...localeArgs)}
         </time>
       </li>
     ))}

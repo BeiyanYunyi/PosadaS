@@ -1,4 +1,6 @@
-import prisma from './database';
+import { image } from '@drizzle/schema/schema';
+import { eq } from 'drizzle-orm';
+import { db } from './database';
 
 const getImgID = (imgURL: string) => {
   const imgURLStrAry = imgURL.replace('.webp', '').replace('.jpg', '').split('/');
@@ -8,9 +10,9 @@ const getImgID = (imgURL: string) => {
 const getImgURL = async (imgURL: string) => {
   if (imgURL.includes('uploads')) return imgURL;
   const imgID = getImgID(imgURL);
-  const img = await prisma.image.findFirst({
-    where: { imgID },
-    select: { imgID: true },
+  const img = await db.query.image.findFirst({
+    where: eq(image.imgId, imgID),
+    columns: { imgId: true },
   });
   if (img) return `/api/img/${imgID}`;
   return imgURL;

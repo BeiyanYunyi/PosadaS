@@ -1,4 +1,6 @@
-import prisma from '@/app/utils/database';
+import { db } from '@/app/utils/database';
+import { topicList } from '@drizzle/schema/schema';
+import { eq } from 'drizzle-orm';
 import { readFile } from 'fs/promises';
 import { notFound } from 'next/navigation';
 import { ImageResponse } from 'next/og';
@@ -9,12 +11,12 @@ export const size = {
 };
 
 export const contentType = 'image/png';
-const font = await readFile('./src/app/topic/[topicID]/MapleMono-SC-NF-Regular.ttf');
+const font = await readFile('./src/app/topic/[topicId]/MapleMono-SC-NF-Regular.ttf');
 
-const OgImage = async ({ params }: { params: { topicID: string } }) => {
-  const topic = await prisma.topicList.findUnique({
-    where: { topicID: params.topicID },
-    select: { title: true, content: true, authorName: true },
+const OgImage = async ({ params }: { params: { topicId: string } }) => {
+  const topic = await db.query.topicList.findFirst({
+    where: eq(topicList.topicId, params.topicId),
+    columns: { title: true, content: true, authorName: true },
   });
   if (!topic) notFound();
   return new ImageResponse(

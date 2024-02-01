@@ -1,6 +1,8 @@
 import AppLink from '@/app/components/AppLink';
 import TopicList from '@/app/components/TopicList';
-import prisma from '@/app/utils/database';
+import { db } from '@/app/utils/database';
+import { topicList } from '@drizzle/schema/schema';
+import { count as dbCount, desc } from 'drizzle-orm';
 
 // export const generateStaticParams = async () => {
 //   const count = Math.round((await prisma.topicList.count()) / 100);
@@ -10,22 +12,24 @@ import prisma from '@/app/utils/database';
 // };
 
 const Page = async ({ params }: { params: { pageNum: string } }) => {
-  const content = await prisma.topicList.findMany({
-    select: {
-      title: true,
-      topicID: true,
-      lastReplyTime: true,
-      isElite: true,
-      deleteTime: true,
-      authorName: true,
-      reply: true,
-      authorID: true,
-    },
-    orderBy: { lastReplyTime: 'desc' },
-    take: 100,
-    skip: (Number(params.pageNum) - 1) * 100,
-  });
-  const count = Math.round((await prisma.topicList.count()) / 100);
+  const content = await db.query.topicList
+    .findMany({
+      columns: {
+        title: true,
+        topicId: true,
+        lastReplyTime: true,
+        isElite: true,
+        deleteTime: true,
+        authorName: true,
+        reply: true,
+        authorId: true,
+      },
+      orderBy: desc(topicList.lastReplyTime),
+      limit: 100,
+      offset: (Number(params.pageNum) - 1) * 100,
+    })
+    .execute();
+  const count = Math.round((await db.select({ value: dbCount() }).from(topicList))[0].value / 100);
   return (
     <>
       <TopicList content={content} />

@@ -1,13 +1,15 @@
+import { topicList } from '@drizzle/schema/schema';
+import { desc } from 'drizzle-orm';
 import { MetadataRoute } from 'next';
-import prisma from './utils/database';
+import { db } from './utils/database';
 
 const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
-  const topics = await prisma.topicList.findMany({
-    select: { topicID: true, lastReplyTime: true },
-    orderBy: { lastReplyTime: 'desc' },
+  const topics = await db.query.topicList.findMany({
+    columns: { topicId: true, lastReplyTime: true },
+    orderBy: desc(topicList.lastReplyTime),
   });
   return topics.map((topic) => ({
-    url: `${process.env.SERVE_URL}/topic/${topic.topicID}`,
+    url: `${process.env.SERVE_URL}/topic/${topic.topicId}`,
   }));
 };
 

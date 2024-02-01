@@ -1,24 +1,28 @@
+import { topicList } from '@drizzle/schema/schema';
 import { css } from '@styles/css';
+import { desc } from 'drizzle-orm';
 import AppLink from './components/AppLink';
 import Random from './components/Random';
 import TopicList from './components/TopicList';
-import prisma from './utils/database';
+import { db } from './utils/database';
 
 const Home = async () => {
-  const content = await prisma.topicList.findMany({
-    select: {
-      title: true,
-      topicID: true,
-      lastReplyTime: true,
-      isElite: true,
-      deleteTime: true,
-      authorName: true,
-      reply: true,
-      authorID: true,
-    },
-    orderBy: { lastReplyTime: 'desc' },
-    take: 100,
-  });
+  const content = await db.query.topicList
+    .findMany({
+      columns: {
+        title: true,
+        topicId: true,
+        lastReplyTime: true,
+        isElite: true,
+        deleteTime: true,
+        authorName: true,
+        reply: true,
+        authorId: true,
+      },
+      orderBy: desc(topicList.lastReplyTime),
+      limit: 100,
+    })
+    .execute();
   return (
     <>
       <Random />

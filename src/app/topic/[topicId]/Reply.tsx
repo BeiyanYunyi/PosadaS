@@ -22,27 +22,27 @@ const quotingClass = css({
 
 const Reply: FC<{
   reply: {
-    replyID: string;
-    topicID: string | null;
-    authorID: string | null;
+    replyId: string;
+    topicId: string | null;
+    authorId: string | null;
     authorName: string | null;
     isPoster: boolean | null;
-    replyTime: bigint | null;
+    replyTime: number | null;
     content: string | null;
     image: string | null;
     quoting: boolean | null;
     quotingImage: string | null;
     quotingText: string | null;
-    quotingAuthorID: string | null;
+    quotingAuthorId: string | null;
     quotingAuthorName: string | null;
     votes: number | null;
   };
   isAuthor: boolean;
 }> = ({ reply, isAuthor }) => (
-  <section key={reply.replyID} id={reply.replyID} className={css({ mb: '0.5rem' })}>
+  <section key={reply.replyId} id={reply.replyId} className={css({ mb: '0.5rem' })}>
     <h4 className={h4Class}>
-      {isUUID(reply.replyID) && <OriginalTag />}
-      <AppLink href={`https://www.douban.com/people/${reply.authorID}`}>{reply.authorName}</AppLink>
+      {isUUID(reply.replyId) && <OriginalTag />}
+      <AppLink href={`https://www.douban.com/people/${reply.authorId}`}>{reply.authorName}</AppLink>
       {isAuthor && <AuthorTag />}
       <span
         className={css({
@@ -56,7 +56,7 @@ const Reply: FC<{
       <div className={quotingClass}>
         {reply.quotingText && parseHTML(reply.quotingText)}
         <AppLink
-          href={`https://www.douban.com/people/${reply.quotingAuthorID}`}
+          href={`https://www.douban.com/people/${reply.quotingAuthorId}`}
           className={css({ ml: '0.625rem' })}
         >
           {reply.quotingAuthorName}

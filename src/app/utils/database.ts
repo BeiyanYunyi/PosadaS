@@ -1,15 +1,13 @@
-import { PrismaClient } from '@prisma/client';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import { Client } from 'pg';
+import { cache } from 'react';
+import * as schema from '../../../drizzle/schema';
 
-const prismaClientSingleton = () => new PrismaClient();
+const getDb = cache(async () => {
+  const client = new Client({ connectionString: process.env.DATABASE_URL });
+  await client.connect();
+  const db = drizzle(client, { schema });
+  return db;
+});
 
-type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>;
-
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClientSingleton | undefined;
-};
-
-const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
-
-export default prisma;
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+export const db = await getDb();
