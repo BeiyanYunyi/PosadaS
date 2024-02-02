@@ -1,7 +1,7 @@
 import db from '@/app/utils/database';
+import getFonts from '@/app/utils/getFonts';
 import { reply, topicList } from '@drizzle/schema/schema';
 import { eq } from 'drizzle-orm';
-import { readFile } from 'fs/promises';
 import { notFound } from 'next/navigation';
 import { ImageResponse } from 'next/og';
 
@@ -11,7 +11,7 @@ export const size = {
 };
 
 export const contentType = 'image/png';
-const font = await readFile('./src/app/topic/[topicId]/MapleMono-SC-NF-Regular.ttf');
+const fonts = await getFonts();
 
 const OgImage = async ({ params }: { params: { topicId: string; replyId: string } }) => {
   const query = await db.query.topicList.findFirst({
@@ -72,7 +72,7 @@ const OgImage = async ({ params }: { params: { topicId: string; replyId: string 
       // For convenience, we can re-use the exported opengraph-image
       // size config to also set the ImageResponse's width and height.
       ...size,
-      fonts: [{ data: font, name: 'Maple Mono SC NF', style: 'normal' }],
+      fonts,
     },
   );
 };
