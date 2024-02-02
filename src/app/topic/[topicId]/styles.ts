@@ -1,6 +1,8 @@
 import { css } from '@styles/css';
 
 export const h4Class = css({
+  display: 'flex',
+  alignItems: 'center',
   fontStyle: 'inherit',
   backgroundColor: '#f0f6f3',
   color: '#666',

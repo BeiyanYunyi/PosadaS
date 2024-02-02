@@ -1,6 +1,8 @@
 import AppImage from '@/app/components/AppImage';
 import AppLink from '@/app/components/AppLink';
 import AuthorTag from '@/app/components/AuthorTag';
+import CopyLinkButton from '@/app/components/CopyLinkButton';
+import LinkIcon from '@/app/components/LinkIcon';
 import OriginalTag from '@/app/components/OriginalTag';
 import isUUID from '@/app/utils/isUUID';
 import localeArgs from '@/app/utils/localeArgs';
@@ -51,6 +53,20 @@ const Reply: FC<{
       >
         {new Date(Number(reply.replyTime!) * 1000).toLocaleString(...localeArgs)}
       </span>
+      <div className={css({ flexGrow: 1 })} />
+      <CopyLinkButton
+        className={css({
+          color: '#37a',
+          background: undefined,
+          _hover: {
+            color: 'white',
+            background: '#37a',
+          },
+        })}
+        link={`${process.env.SERVE_URL}/topic/${reply.topicId}/reply/${reply.replyId}`}
+      >
+        <LinkIcon />
+      </CopyLinkButton>
     </h4>
     {reply.quoting && (
       <div className={quotingClass}>

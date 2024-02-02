@@ -1,11 +1,10 @@
+import * as schema from '@drizzle/schema/schema';
 import { drizzle } from 'drizzle-orm/node-postgres';
-import { Client } from 'pg';
+import { Pool } from 'pg';
 import { cache } from 'react';
-import * as schema from '../../../drizzle/schema';
 
 const getDb = cache(async () => {
-  const client = new Client({ connectionString: process.env.DATABASE_URL });
-  await client.connect();
+  const client = new Pool({ connectionString: process.env.DATABASE_URL });
   const db = drizzle(client, { schema });
   return db;
 });
