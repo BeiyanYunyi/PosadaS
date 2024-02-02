@@ -1,4 +1,4 @@
-import { db } from '@/app/utils/database';
+import db from '@/app/utils/database';
 import { image } from '@drizzle/schema/schema';
 import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';

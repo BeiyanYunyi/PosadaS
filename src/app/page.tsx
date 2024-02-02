@@ -1,10 +1,10 @@
+import db from '@/app/utils/database';
 import { topicList } from '@drizzle/schema/schema';
 import { css } from '@styles/css';
 import { desc } from 'drizzle-orm';
 import AppLink from './components/AppLink';
 import Random from './components/Random';
 import TopicList from './components/TopicList';
-import { db } from './utils/database';
 
 const Home = async () => {
   const content = await db.query.topicList.findMany({

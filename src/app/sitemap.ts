@@ -1,7 +1,7 @@
+import db from '@/app/utils/database';
 import { topicList } from '@drizzle/schema/schema';
 import { desc } from 'drizzle-orm';
 import { MetadataRoute } from 'next';
-import { db } from './utils/database';
 
 const sitemap = async (): Promise<MetadataRoute.Sitemap> => {
   const topics = await db.query.topicList.findMany({

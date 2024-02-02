@@ -1,6 +1,6 @@
 import AppLink from '@/app/components/AppLink';
 import TopicList from '@/app/components/TopicList';
-import { db } from '@/app/utils/database';
+import db from '@/app/utils/database';
 import { topicList } from '@drizzle/schema/schema';
 import { count as dbCount, desc } from 'drizzle-orm';
 

@@ -10,4 +10,6 @@ const getDb = cache(async () => {
   return db;
 });
 
-export const db = await getDb();
+const db = await getDb();
+
+export default db;

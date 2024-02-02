@@ -1,6 +1,6 @@
 import { topicList } from '@drizzle/schema/schema';
 import { count } from 'drizzle-orm';
-import { db } from '../utils/database';
+import db from '@/app/utils/database';
 import AppLink from './AppLink';
 
 const Random = async () => {

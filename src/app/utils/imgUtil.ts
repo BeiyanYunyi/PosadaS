@@ -1,6 +1,6 @@
+import db from '@/app/utils/database';
 import { image } from '@drizzle/schema/schema';
 import { eq } from 'drizzle-orm';
-import { db } from './database';
 
 const getImgID = (imgURL: string) => {
   const imgURLStrAry = imgURL.replace('.webp', '').replace('.jpg', '').split('/');

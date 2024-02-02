@@ -1,10 +1,10 @@
 import { css } from '@styles/css';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FC } from 'react';
+import { FC, Suspense } from 'react';
 import getImgURL from '../utils/imgUtil';
 
-const AppImage: FC<{ src: string }> = async ({ src }) => {
+const AppImageInner: FC<{ src: string }> = async ({ src }) => {
   const rSrc = await getImgURL(src);
   return (
     <Link
@@ -31,5 +31,27 @@ const AppImage: FC<{ src: string }> = async ({ src }) => {
     </Link>
   );
 };
+
+const AppImage: FC<{ src: string }> = ({ src }) => (
+  <Suspense
+    fallback={
+      <div
+        className={css({
+          display: 'block',
+          position: 'relative',
+          h: '30rem',
+          w: 'full',
+          lg: {
+            w: '30rem',
+          },
+        })}
+      >
+        Loading...
+      </div>
+    }
+  >
+    <AppImageInner src={src} />
+  </Suspense>
+);
 
 export default AppImage;
