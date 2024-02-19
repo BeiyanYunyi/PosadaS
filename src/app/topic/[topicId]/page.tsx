@@ -10,6 +10,8 @@ import Reply from './Reply';
 //   return topics.map((item) => ({ topicId: item.topicId }));
 // };
 
+export const runtime = process.env.VERCEL ? 'edge' : 'nodejs';
+
 const Page = async ({ params }: { params: { topicId: string } }) => {
   const topic = await db.query.topicList.findFirst({
     where: eq(topicList.topicId, params.topicId),
