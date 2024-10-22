@@ -11,7 +11,7 @@ export const size = {
 };
 
 export const contentType = 'image/png';
-export const runtime = process.env.VERCEL ? 'edge' : 'nodejs';
+// export const runtime = process.env.VERCEL ? 'edge' : 'nodejs';
 const fonts = await getFonts();
 
 const OgImage = async ({ params }: { params: { topicId: string; replyId: string } }) => {

@@ -3,11 +3,12 @@ import { reply, topicList } from '@drizzle/schema/schema';
 import { eq } from 'drizzle-orm';
 import { notFound, redirect } from 'next/navigation';
 
-export const generateMetadata = async ({
-  params,
-}: {
-  params: { topicId: string; replyId: string };
-}) => {
+export const generateMetadata = async (
+  props: {
+    params: Promise<{ topicId: string; replyId: string }>;
+  }
+) => {
+  const params = await props.params;
   const topic = await db.query.topicList.findFirst({
     where: eq(topicList.topicId, params.topicId),
     columns: { title: true, content: true },
@@ -20,7 +21,9 @@ export const generateMetadata = async ({
   };
 };
 
-const TopicReply = ({ params }: { params: { topicId: string; replyId: string } }) =>
-  redirect(`/topic/${params.topicId}#${params.replyId}`);
+const TopicReply = async (props: { params: Promise<{ topicId: string; replyId: string }> }) => {
+  const params = await props.params;
+  return redirect(`/topic/${params.topicId}#${params.replyId}`);
+};
 
 export default TopicReply;

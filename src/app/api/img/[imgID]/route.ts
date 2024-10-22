@@ -3,7 +3,8 @@ import { image } from '@drizzle/schema/schema';
 import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 
-export const GET = async (_request: Request, { params }: { params: { imgID: string } }) => {
+export const GET = async (_request: Request, props: { params: Promise<{ imgID: string }> }) => {
+  const params = await props.params;
   const { imgID } = params;
   const img = await db.query.image.findFirst({
     where: eq(image.imgId, imgID),

@@ -14,7 +14,8 @@ import { notFound } from 'next/navigation';
 import { FC, ReactNode } from 'react';
 import { h4Class } from './styles';
 
-export const generateMetadata = async ({ params }: { params: { topicId: string } }) => {
+export const generateMetadata = async (props: { params: Promise<{ topicId: string }> }) => {
+  const params = await props.params;
   const topic = await db.query.topicList.findFirst({
     where: eq(topicList.topicId, params.topicId),
     columns: { title: true, content: true },
@@ -38,10 +39,15 @@ const h1Class = css({
 
 const TopicLayout: FC<{
   children: ReactNode;
-  params: { topicId: string };
-}> = async ({ children, params }) => {
+  params: Promise<{ topicId: string }>;
+}> = async (props) => {
+  const { params } = props;
+  const { topicId } = await params;
+
+  const { children } = props;
+
   const topic = await db.query.topicList.findFirst({
-    where: eq(topicList.topicId, params.topicId),
+    where: eq(topicList.topicId, topicId),
   });
   if (!topic) notFound();
 

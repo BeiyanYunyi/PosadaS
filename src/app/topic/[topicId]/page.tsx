@@ -5,16 +5,18 @@ import { notFound } from 'next/navigation';
 import type { DiscussionForumPosting, WithContext } from 'schema-dts';
 import Reply from './Reply';
 
-// export const generateStaticParams = async () => {
-//   const topics = await db.query.topicList.findMany({ columns: { topicId: true } });
-//   return topics.map((item) => ({ topicId: item.topicId }));
-// };
+export const generateStaticParams = async () => {
+  const topics = await db.query.topicList.findMany({ columns: { topicId: true } });
+  return topics.map((item) => ({ topicId: item.topicId }));
+};
 
-export const runtime = process.env.VERCEL ? 'edge' : 'nodejs';
+// export const runtime = process.env.VERCEL ? 'edge' : 'nodejs';
 
-const Page = async ({ params }: { params: { topicId: string } }) => {
+const Page = async (props: { params: Promise<{ topicId: string }> }) => {
+  const { params } = props;
+  const { topicId } = await params;
   const topic = await db.query.topicList.findFirst({
-    where: eq(topicList.topicId, params.topicId),
+    where: eq(topicList.topicId, topicId),
     with: {
       replies: true,
     },

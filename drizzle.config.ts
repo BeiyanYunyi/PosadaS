@@ -3,8 +3,8 @@ import schemaName from '@/app/utils/schemaName';
 import { defineConfig } from 'drizzle-kit';
 
 export default defineConfig({
-  driver: 'pg',
-  dbCredentials: { connectionString: process.env.DATABASE_URL! },
+  dialect: 'postgresql',
+  dbCredentials: { url: process.env.DATABASE_URL! },
   verbose: true,
   strict: true,
   schemaFilter: [schemaName],
