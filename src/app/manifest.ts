@@ -1,4 +1,4 @@
-import { MetadataRoute } from 'next';
+import type { MetadataRoute } from 'next';
 import { metadata } from './layout';
 
 const manifest = (): MetadataRoute.Manifest => ({
@@ -9,7 +9,9 @@ const manifest = (): MetadataRoute.Manifest => ({
   display: 'standalone',
   background_color: '#fff',
   theme_color: '#000',
-  icons: [{ src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' }],
+  icons: [
+    { src: '/icon.svg', sizes: 'any', type: 'image/svg+xml', purpose: 'any' },
+  ],
 });
 
 export default manifest;

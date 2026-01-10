@@ -1,6 +1,11 @@
 'use client';
 
-import { ButtonHTMLAttributes, DetailedHTMLProps, FC, ReactNode } from 'react';
+import type {
+  ButtonHTMLAttributes,
+  DetailedHTMLProps,
+  FC,
+  ReactNode,
+} from 'react';
 
 const CopyLinkButton: FC<
   { children: ReactNode; link: string } & DetailedHTMLProps<

@@ -1,3 +1,6 @@
+import { css } from '@styles/css';
+import { notFound } from 'next/navigation';
+import type { FC, ReactNode } from 'react';
 import AppLink from '@/app/components/AppLink';
 import DeletedTag from '@/app/components/DeletedTag';
 import EliteTag from '@/app/components/EliteTag';
@@ -7,17 +10,14 @@ import db from '@/app/utils/database';
 import isUUID from '@/app/utils/isUUID';
 import localeArgs from '@/app/utils/localeArgs';
 import parseHTML from '@/app/utils/parseHTML';
-import { topicList } from '@drizzle/schema/schema';
-import { css } from '@styles/css';
-import { eq } from 'drizzle-orm';
-import { notFound } from 'next/navigation';
-import { FC, ReactNode } from 'react';
 import { h4Class } from './styles';
 
-export const generateMetadata = async (props: { params: Promise<{ topicId: string }> }) => {
+export const generateMetadata = async (props: {
+  params: Promise<{ topicId: string }>;
+}) => {
   const params = await props.params;
   const topic = await db.query.topicList.findFirst({
-    where: eq(topicList.topicId, params.topicId),
+    where: { topicId: params.topicId },
     columns: { title: true, content: true },
   });
   if (!topic) notFound();
@@ -47,7 +47,7 @@ const TopicLayout: FC<{
   const { children } = props;
 
   const topic = await db.query.topicList.findFirst({
-    where: eq(topicList.topicId, topicId),
+    where: { topicId },
   });
   if (!topic) notFound();
 
@@ -69,10 +69,14 @@ const TopicLayout: FC<{
                 mx: '1rem',
               })}
             >
-              {new Date(Number(topic.createTime!) * 1000).toLocaleString(...localeArgs)}
+              {new Date(Number(topic.createTime!) * 1000).toLocaleString(
+                ...localeArgs,
+              )}
             </span>
           </h4>
-          <div className={css({ mb: '1.5rem' })}>{parseHTML(topic.content!)}</div>
+          <div className={css({ mb: '1.5rem' })}>
+            {parseHTML(topic.content!)}
+          </div>
         </section>
         {children}
       </article>

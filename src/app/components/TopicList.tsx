@@ -5,7 +5,7 @@ import OriginalTag from '@/app/components/OriginalTag';
 import isUUID from '@/app/utils/isUUID';
 import { css } from '@styles/css';
 import clsx from 'clsx';
-import { FC } from 'react';
+import type { FC } from 'react';
 import localeArgs from '../utils/localeArgs';
 import ReplyIcon from './ReplyIcon';
 
@@ -42,11 +42,18 @@ const TopicList: FC<{
   }[];
 }> = ({ content }) => (
   <ul className={css({ w: '100%' })}>
-    <li className={clsx(liStyle, css({ display: 'none', lg: { display: 'grid' } }))}>
+    <li
+      className={clsx(
+        liStyle,
+        css({ display: 'none', lg: { display: 'grid' } }),
+      )}
+    >
       <span className={thStyle}>讨论</span>
       <span className={thStyle}>作者</span>
       <span className={thStyle}>回应</span>
-      <span className={clsx(thStyle, css({ textAlign: 'center' }))}>最后回应</span>
+      <span className={clsx(thStyle, css({ textAlign: 'center' }))}>
+        最后回应
+      </span>
     </li>
     {content.map((item) => (
       <li key={item.topicId} className={liStyle}>
@@ -58,11 +65,20 @@ const TopicList: FC<{
         </div>
         <AppLink
           href={`https://www.douban.com/people/${item.authorId}`}
-          className={css({ fontSize: '0.8rem', w: 'fit-content', lg: { fontSize: '1rem' } })}
+          className={css({
+            fontSize: '0.8rem',
+            w: 'fit-content',
+            lg: { fontSize: '1rem' },
+          })}
         >
           {item.authorName}
         </AppLink>
-        <p className={clsx(thStyle, css({ fontSize: '0.8rem', lg: { fontSize: '1rem' } }))}>
+        <p
+          className={clsx(
+            thStyle,
+            css({ fontSize: '0.8rem', lg: { fontSize: '1rem' } }),
+          )}
+        >
           <ReplyIcon
             className={css({
               w: '0.8rem',
@@ -77,7 +93,11 @@ const TopicList: FC<{
         <time
           className={clsx(
             thStyle,
-            css({ fontSize: '0.8rem', textAlign: 'end', lg: { fontSize: '1rem' } }),
+            css({
+              fontSize: '0.8rem',
+              textAlign: 'end',
+              lg: { fontSize: '1rem' },
+            }),
           )}
         >
           {new Date(item.lastReplyTime! * 1000).toLocaleString(...localeArgs)}

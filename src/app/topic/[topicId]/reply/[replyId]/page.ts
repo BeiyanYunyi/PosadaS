@@ -1,18 +1,14 @@
-import db from '@/app/utils/database';
-import { reply, topicList } from '@drizzle/schema/schema';
-import { eq } from 'drizzle-orm';
 import { notFound, redirect } from 'next/navigation';
+import db from '@/app/utils/database';
 
-export const generateMetadata = async (
-  props: {
-    params: Promise<{ topicId: string; replyId: string }>;
-  }
-) => {
+export const generateMetadata = async (props: {
+  params: Promise<{ topicId: string; replyId: string }>;
+}) => {
   const params = await props.params;
   const topic = await db.query.topicList.findFirst({
-    where: eq(topicList.topicId, params.topicId),
+    where: { topicId: params.topicId },
     columns: { title: true, content: true },
-    with: { replies: { where: eq(reply.replyId, params.replyId) } },
+    with: { replies: { where: { replyId: params.replyId } } },
   });
   if (!topic) notFound();
   return {
@@ -21,7 +17,9 @@ export const generateMetadata = async (
   };
 };
 
-const TopicReply = async (props: { params: Promise<{ topicId: string; replyId: string }> }) => {
+const TopicReply = async (props: {
+  params: Promise<{ topicId: string; replyId: string }>;
+}) => {
   const params = await props.params;
   return redirect(`/topic/${params.topicId}#${params.replyId}`);
 };

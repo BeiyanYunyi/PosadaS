@@ -1,11 +1,13 @@
+import { topicList } from '@drizzle/schema/schema';
+import { count as dbCount } from 'drizzle-orm';
 import AppLink from '@/app/components/AppLink';
 import TopicList from '@/app/components/TopicList';
 import db from '@/app/utils/database';
-import { topicList } from '@drizzle/schema/schema';
-import { count as dbCount, desc } from 'drizzle-orm';
 
 export const generateStaticParams = async () => {
-  const count = Math.round((await db.select({ value: dbCount() }).from(topicList))[0].value / 100);
+  const count = Math.round(
+    (await db.select({ value: dbCount() }).from(topicList))[0].value / 100,
+  );
   return Array.from({ length: count }, (_, i) => i + 1).map((item) => ({
     pageNum: item.toString(),
   }));
@@ -25,17 +27,23 @@ const Page = async (props: { params: Promise<{ pageNum: string }> }) => {
       reply: true,
       authorId: true,
     },
-    orderBy: desc(topicList.lastReplyTime),
+    orderBy: { lastReplyTime: 'desc' },
     limit: 100,
     offset: (Number(pageNum) - 1) * 100,
   });
-  const count = Math.round((await db.select({ value: dbCount() }).from(topicList))[0].value / 100);
+  const count = Math.round(
+    (await db.select({ value: dbCount() }).from(topicList))[0].value / 100,
+  );
   return (
     <>
       <TopicList content={content} />
       <div>
         {Array.from({ length: count }, (_, i) => i + 1).map((item) => (
-          <AppLink href={`/page/${item}`} key={item} activated={Number(pageNum) === item}>
+          <AppLink
+            href={`/page/${item}`}
+            key={item}
+            activated={Number(pageNum) === item}
+          >
             {item}
           </AppLink>
         ))}

@@ -1,3 +1,5 @@
+import { css } from '@styles/css';
+import type { FC } from 'react';
 import AppImage from '@/app/components/AppImage';
 import AppLink from '@/app/components/AppLink';
 import AuthorTag from '@/app/components/AuthorTag';
@@ -7,8 +9,6 @@ import OriginalTag from '@/app/components/OriginalTag';
 import isUUID from '@/app/utils/isUUID';
 import localeArgs from '@/app/utils/localeArgs';
 import parseHTML from '@/app/utils/parseHTML';
-import { css } from '@styles/css';
-import { FC } from 'react';
 import { h4Class } from './styles';
 
 const quotingClass = css({
@@ -41,17 +41,25 @@ const Reply: FC<{
   };
   isAuthor: boolean;
 }> = ({ reply, isAuthor }) => (
-  <section key={reply.replyId} id={reply.replyId} className={css({ mb: '0.5rem' })}>
+  <section
+    key={reply.replyId}
+    id={reply.replyId}
+    className={css({ mb: '0.5rem' })}
+  >
     <h4 className={h4Class}>
       {isUUID(reply.replyId) && <OriginalTag />}
-      <AppLink href={`https://www.douban.com/people/${reply.authorId}`}>{reply.authorName}</AppLink>
+      <AppLink href={`https://www.douban.com/people/${reply.authorId}`}>
+        {reply.authorName}
+      </AppLink>
       {isAuthor && <AuthorTag />}
       <span
         className={css({
           mx: '1rem',
         })}
       >
-        {new Date(Number(reply.replyTime!) * 1000).toLocaleString(...localeArgs)}
+        {new Date(Number(reply.replyTime!) * 1000).toLocaleString(
+          ...localeArgs,
+        )}
       </span>
       <div className={css({ flexGrow: 1 })} />
       <CopyLinkButton
@@ -80,8 +88,16 @@ const Reply: FC<{
       </div>
     )}
     {reply.image && <AppImage src={reply.image} />}
-    <div className={css({ mb: '0.5rem', whiteSpace: 'pre-wrap' })}>{parseHTML(reply.content!)}</div>
-    <div className={css({ fontSize: '0.875rem', color: '#aaa', textAlign: 'right' })}>
+    <div className={css({ mb: '0.5rem', whiteSpace: 'pre-wrap' })}>
+      {parseHTML(reply.content!)}
+    </div>
+    <div
+      className={css({
+        fontSize: '0.875rem',
+        color: '#aaa',
+        textAlign: 'right',
+      })}
+    >
       赞 {!!reply.votes && <>({reply.votes})</>}
     </div>
   </section>

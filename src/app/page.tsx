@@ -1,7 +1,5 @@
 import db from '@/app/utils/database';
-import { topicList } from '@drizzle/schema/schema';
 import { css } from '@styles/css';
-import { desc } from 'drizzle-orm';
 import AppLink from './components/AppLink';
 import Random from './components/Random';
 import TopicList from './components/TopicList';
@@ -18,7 +16,7 @@ const Home = async () => {
       reply: true,
       authorId: true,
     },
-    orderBy: desc(topicList.lastReplyTime),
+    orderBy: { lastReplyTime: 'desc' },
     limit: 100,
   });
   return (

@@ -3,11 +3,14 @@
 import { css } from '@styles/css';
 import clsx from 'clsx';
 import Link from 'next/link';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 const AppLink: FC<
   // eslint-disable-next-line react/require-default-props
-  React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string; activated?: boolean }
+  React.AnchorHTMLAttributes<HTMLAnchorElement> & {
+    href: string;
+    activated?: boolean;
+  }
 > = (props) => {
   const { className: outerClass, activated, ...otherProp } = props;
   return (

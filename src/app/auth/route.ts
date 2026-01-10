@@ -7,5 +7,7 @@ const params = {
 };
 
 export const GET = async () => {
-  redirect(`https://auth.band.us/oauth2/authorize?${new URLSearchParams(params)}`);
+  redirect(
+    `https://auth.band.us/oauth2/authorize?${new URLSearchParams(params)}`,
+  );
 };

@@ -1,12 +1,12 @@
-import db from '@/app/utils/database';
-import { topicList } from '@drizzle/schema/schema';
-import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 import type { DiscussionForumPosting, WithContext } from 'schema-dts';
+import db from '@/app/utils/database';
 import Reply from './Reply';
 
 export const generateStaticParams = async () => {
-  const topics = await db.query.topicList.findMany({ columns: { topicId: true } });
+  const topics = await db.query.topicList.findMany({
+    columns: { topicId: true },
+  });
   return topics.map((item) => ({ topicId: item.topicId }));
 };
 
@@ -16,7 +16,7 @@ const Page = async (props: { params: Promise<{ topicId: string }> }) => {
   const { params } = props;
   const { topicId } = await params;
   const topic = await db.query.topicList.findFirst({
-    where: eq(topicList.topicId, topicId),
+    where: { topicId },
     with: {
       replies: true,
     },
@@ -51,10 +51,15 @@ const Page = async (props: { params: Promise<{ topicId: string }> }) => {
   return (
     <>
       {topic.replies.map((item) => (
-        <Reply key={item.replyId} reply={item} isAuthor={topic.authorId === item.authorId} />
+        <Reply
+          key={item.replyId}
+          reply={item}
+          isAuthor={topic.authorId === item.authorId}
+        />
       ))}
       <script
         type="application/ld+json"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: not user content, safe to use
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
     </>

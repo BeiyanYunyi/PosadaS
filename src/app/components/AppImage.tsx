@@ -1,7 +1,7 @@
 import { css } from '@styles/css';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FC, Suspense } from 'react';
+import { type FC, Suspense } from 'react';
 import getImgURL from '../utils/imgUtil';
 
 const AppImageInner: FC<{ src: string }> = async ({ src }) => {

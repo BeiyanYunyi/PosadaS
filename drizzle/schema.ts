@@ -1,10 +1,9 @@
-import schemaName from '@/app/utils/schemaName';
-import { relations } from 'drizzle-orm';
+import { defineRelations } from 'drizzle-orm';
 import {
   bigint,
   bigserial,
   boolean,
-  customType,
+  bytea,
   index,
   integer,
   pgSchema,
@@ -13,12 +12,7 @@ import {
   uniqueIndex,
   varchar,
 } from 'drizzle-orm/pg-core';
-
-const bytea = customType<{ data: Buffer; notNull: false; default: false }>({
-  dataType() {
-    return 'bytea';
-  },
-});
+import schemaName from '@/app/utils/schemaName';
 
 export const schema = pgSchema(schemaName);
 
@@ -31,14 +25,15 @@ export const image = schema.table(
   {
     id: bigserial('id', { mode: 'bigint' }).primaryKey().notNull(),
     imgId: varchar('imgID', { length: 255 }),
-    // TODO: failed to parse database type 'bytea'
     imgContent: bytea('imgContent'),
   },
-  (table) => ({
-    imgID: index('image_img_i_d').on(table.imgId),
-    imgidIdx: index('image_imgid_index').on(table.imgId),
-    imageImgidUnique: unique('image_imgid_unique').on(table.imgId),
-  }),
+  (table) => [
+    {
+      imgID: index('image_img_i_d').on(table.imgId),
+      imgidIdx: index('image_imgid_index').on(table.imgId),
+      imageImgidUnique: unique('image_imgid_unique').on(table.imgId),
+    },
+  ],
 );
 
 export const reply = schema.table(
@@ -60,10 +55,12 @@ export const reply = schema.table(
     content: text('content'),
     votes: integer('votes').default(0),
   },
-  (table) => ({
-    idx38486Replytime: index('idx_38486_replytime').on(table.replyTime),
-    replyTime: index('reply_reply_time').on(table.replyTime),
-  }),
+  (table) => [
+    {
+      idx38486Replytime: index('idx_38486_replytime').on(table.replyTime),
+      replyTime: index('reply_reply_time').on(table.replyTime),
+    },
+  ],
 );
 
 export const topicList = schema.table(
@@ -85,20 +82,20 @@ export const topicList = schema.table(
     // You can use { mode: "bigint" } if numbers are exceeding js number limitations
     deleteTime: bigint('deleteTime', { mode: 'number' }),
   },
-  (table) => ({
-    idx16976Lastreplytime: index('idx_16976_lastreplytime').on(table.lastReplyTime),
-    idx16976SqliteAutoindexTopiclist1: uniqueIndex('idx_16976_sqlite_autoindex_topiclist_1').on(
-      table.topicId,
-    ),
-    topicListLastReplyTime: index('topic_list_last_reply_time').on(table.lastReplyTime),
-  }),
+  (table) => [
+    {
+      idx16976Lastreplytime: index('idx_16976_lastreplytime').on(
+        table.lastReplyTime,
+      ),
+      idx16976SqliteAutoindexTopiclist1: uniqueIndex(
+        'idx_16976_sqlite_autoindex_topiclist_1',
+      ).on(table.topicId),
+      topicListLastReplyTime: index('topic_list_last_reply_time').on(
+        table.lastReplyTime,
+      ),
+    },
+  ],
 );
-
-export const topicListRelations = relations(topicList, ({ many }) => ({ replies: many(reply) }));
-
-export const replyRelations = relations(reply, ({ one }) => ({
-  topic: one(topicList, { fields: [reply.topicId], references: [topicList.topicId] }),
-}));
 
 export const user = schema.table(
   'user',
@@ -112,10 +109,28 @@ export const user = schema.table(
     lastRevokeTime: bigint('lastRevokeTime', { mode: 'number' }),
     isVerified: boolean('isVerified').default(false),
   },
-  (table) => ({
-    idIdx: index().on(table.id),
-    username: index('user_username').on(table.username),
-    usernameIdx: index().on(table.username),
-    userUsernameUnique: unique('user_username_unique').on(table.username),
+  (table) => [
+    {
+      idIdx: index().on(table.id),
+      username: index('user_username').on(table.username),
+      usernameIdx: index().on(table.username),
+      userUsernameUnique: unique('user_username_unique').on(table.username),
+    },
+  ],
+);
+
+export const relations = defineRelations(
+  { topicList, image, reply, dbVersion, user },
+  (r) => ({
+    topicList: { replies: r.many.reply() },
+    image: {},
+    reply: {
+      topic: r.one.topicList({
+        from: r.reply.topicId,
+        to: r.topicList.topicId,
+      }),
+    },
+    dbVersion: {},
+    user: {},
   }),
 );

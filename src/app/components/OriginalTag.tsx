@@ -1,5 +1,5 @@
 import { css } from '@styles/css';
-import { FC } from 'react';
+import type { FC } from 'react';
 
 const OriginalTag: FC = () => (
   <span
