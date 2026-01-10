@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: tensorchord/vchord-postgres:pg18-v1.0.0
+    ports:
+      - "127.0.0.1:5735:5432" # for local development
+    restart: unless-stopped
+    environment:
+      - PGDATA=/var/pgdata
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./data/pgdata:/var/pgdata
+
+  posada-s:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      network: host
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/posadas?schema=717382
+    depends_on:
+      - postgres

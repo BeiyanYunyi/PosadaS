@@ -1,0 +1,11 @@
+node_modules
+.git
+.gitignore
+*.md
+.next
+data
+styled-system
+# .env*
+next-env.d.ts
+*.ttf
+Dockerfile

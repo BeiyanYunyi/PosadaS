@@ -3,12 +3,12 @@ import type { DiscussionForumPosting, WithContext } from 'schema-dts';
 import db from '@/app/utils/database';
 import Reply from './Reply';
 
-export const generateStaticParams = async () => {
-  const topics = await db.query.topicList.findMany({
-    columns: { topicId: true },
-  });
-  return topics.map((item) => ({ topicId: item.topicId }));
-};
+// export const generateStaticParams = async () => {
+//   const topics = await db.query.topicList.findMany({
+//     columns: { topicId: true },
+//   });
+//   return topics.map((item) => ({ topicId: item.topicId }));
+// };
 
 // export const runtime = process.env.VERCEL ? 'edge' : 'nodejs';
 
