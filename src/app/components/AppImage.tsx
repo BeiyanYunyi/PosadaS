@@ -3,6 +3,17 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { type FC, Suspense } from 'react';
 import getImgURL from '../utils/imgUtil';
+import ErrorBoundary from './ErrorBoundary';
+
+const containerCls = css({
+  display: 'block',
+  position: 'relative',
+  h: '30rem',
+  w: 'full',
+  lg: {
+    w: '30rem',
+  },
+});
 
 const AppImageInner: FC<{ src: string }> = async ({ src }) => {
   const rSrc = await getImgURL(src);
@@ -11,47 +22,26 @@ const AppImageInner: FC<{ src: string }> = async ({ src }) => {
       target="_blank"
       rel="noopener noreferrer"
       href={rSrc}
-      className={css({
-        display: 'block',
-        position: 'relative',
-        h: '30rem',
-        w: 'full',
-        lg: {
-          w: '30rem',
-        },
-      })}
+      className={containerCls}
     >
       <Image
         fill
         alt={rSrc}
         className={css({ objectFit: 'contain' })}
         src={rSrc}
-        referrerPolicy="no-referrer"
       />
     </Link>
   );
 };
 
 const AppImage: FC<{ src: string }> = ({ src }) => (
-  <Suspense
-    fallback={
-      <div
-        className={css({
-          display: 'block',
-          position: 'relative',
-          h: '30rem',
-          w: 'full',
-          lg: {
-            w: '30rem',
-          },
-        })}
-      >
-        Loading...
-      </div>
-    }
+  <ErrorBoundary
+    fallback={<div className={containerCls}>Error loading image {src}</div>}
   >
-    <AppImageInner src={src} />
-  </Suspense>
+    <Suspense fallback={<div className={containerCls}>Loading...</div>}>
+      <AppImageInner src={src} />
+    </Suspense>
+  </ErrorBoundary>
 );
 
 export default AppImage;
