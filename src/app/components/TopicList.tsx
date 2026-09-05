@@ -57,7 +57,12 @@ const TopicList: FC<{
     </li>
     {content.map((item) => (
       <li key={item.topicId} className={liStyle}>
-        <div className={css({ gridColumn: 3, lg: { gridColumn: 1 } })}>
+        <div
+          className={css({
+            gridColumn: '1 / 4',
+            lg: { gridColumn: '1' },
+          })}
+        >
           {item.isElite && <EliteTag />}
           {isUUID(item.topicId) && <OriginalTag />}
           {!isUUID(item.topicId) && !!item.deleteTime && <DeletedTag />}
