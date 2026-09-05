@@ -1,0 +1,9 @@
+allowBuilds:
+  bufferutil: true
+  esbuild: true
+  sharp: true
+  utf-8-validate: true
+overrides:
+  "safe-buffer": "npm:@nolyfill/safe-buffer@^1"
+  "safer-buffer": "npm:@nolyfill/safer-buffer@^1"
+  "side-channel": "npm:@nolyfill/side-channel@^1"

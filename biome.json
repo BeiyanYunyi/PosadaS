@@ -31,7 +31,7 @@
   "assist": {
     "enabled": true,
     "actions": {
-      "recommended": true,
+      "preset": "recommended",
       "source": {
         "organizeImports": "on"
       }
@@ -44,7 +44,7 @@
       "react": "recommended"
     },
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "correctness": {
         "useHookAtTopLevel": "error",
         "useExhaustiveDependencies": "error",
