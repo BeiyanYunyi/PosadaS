@@ -1,6 +1,7 @@
-import db from '@/app/utils/database';
 import { css } from '@styles/css';
+import db from '@/app/utils/database';
 import AppLink from './components/AppLink';
+import DiscussionTabs from './components/DiscussionTabs';
 import Random from './components/Random';
 import TopicList from './components/TopicList';
 
@@ -22,17 +23,7 @@ const Home = async () => {
   return (
     <>
       <Random />
-      <nav className={css({ width: '100%' })}>
-        <ul>
-          <li>
-            <AppLink href="" activated>
-              最近讨论
-            </AppLink>
-            <AppLink href="/hot/1">最热讨论</AppLink>
-            <AppLink href="/elite/1">精华讨论</AppLink>
-          </li>
-        </ul>
-      </nav>
+      <DiscussionTabs active="recent" />
       <TopicList content={content} />
       <div
         className={css({

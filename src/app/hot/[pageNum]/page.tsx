@@ -2,6 +2,7 @@ import { reply, topicList } from '@drizzle/schema/schema';
 import { asc, count as dbCount, desc, eq, sql, sum } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 import AppLink from '@/app/components/AppLink';
+import DiscussionTabs from '@/app/components/DiscussionTabs';
 import TopicList from '@/app/components/TopicList';
 import db from '@/app/utils/database';
 
@@ -61,6 +62,7 @@ const Page = async (props: { params: Promise<{ pageNum: string }> }) => {
 
   return (
     <>
+      <DiscussionTabs active="hot" />
       <TopicList content={content} />
       <div>
         {Array.from({ length: count }, (_, i) => i + 1).map((item) => (

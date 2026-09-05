@@ -1,6 +1,7 @@
 import { topicList } from '@drizzle/schema/schema';
 import { count as dbCount } from 'drizzle-orm';
 import AppLink from '@/app/components/AppLink';
+import DiscussionTabs from '@/app/components/DiscussionTabs';
 import TopicList from '@/app/components/TopicList';
 import db from '@/app/utils/database';
 
@@ -36,6 +37,7 @@ const Page = async (props: { params: Promise<{ pageNum: string }> }) => {
   );
   return (
     <>
+      <DiscussionTabs active="recent" />
       <TopicList content={content} />
       <div>
         {Array.from({ length: count }, (_, i) => i + 1).map((item) => (
