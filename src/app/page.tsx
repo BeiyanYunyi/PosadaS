@@ -22,6 +22,17 @@ const Home = async () => {
   return (
     <>
       <Random />
+      <nav className={css({ width: '100%' })}>
+        <ul>
+          <li>
+            <AppLink href="" activated>
+              最近讨论
+            </AppLink>
+            <AppLink href="/hot/1">最热讨论</AppLink>
+            <AppLink href="/elite/1">精华讨论</AppLink>
+          </li>
+        </ul>
+      </nav>
       <TopicList content={content} />
       <div
         className={css({
