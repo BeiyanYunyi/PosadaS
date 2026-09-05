@@ -12,9 +12,14 @@ export const contentType = 'image/png';
 // export const runtime = process.env.VERCEL ? 'edge' : 'nodejs';
 const fonts = await getFonts();
 
-const OgImage = async ({ params }: { params: { topicId: string } }) => {
+const OgImage = async ({
+  params,
+}: {
+  params: Promise<{ topicId: string }>;
+}) => {
+  const { topicId } = await params;
   const topic = await db.query.topicList.findFirst({
-    where: { topicId: params.topicId },
+    where: { topicId },
     columns: { title: true, content: true, authorName: true },
   });
   if (!topic) notFound();

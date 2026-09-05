@@ -15,19 +15,20 @@ const fonts = await getFonts();
 const OgImage = async ({
   params,
 }: {
-  params: { topicId: string; replyId: string };
+  params: Promise<{ topicId: string; replyId: string }>;
 }) => {
+  const { topicId, replyId } = await params;
   const query = await db.query.topicList.findFirst({
-    where: { topicId: params.topicId },
+    where: { topicId },
     columns: { title: true },
     with: {
       replies: {
-        where: { replyId: params.replyId },
+        where: { replyId },
         columns: { content: true, authorName: true },
       },
     },
   });
-  if (!query) notFound();
+  if (!query?.replies[0]) notFound();
   return new ImageResponse(
     // ImageResponse JSX element
     <div
