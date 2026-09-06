@@ -18,7 +18,7 @@ const Page = async (props: { params: Promise<{ topicId: string }> }) => {
   const topic = await db.query.topicList.findFirst({
     where: { topicId },
     with: {
-      replies: true,
+      replies: { orderBy: { replyTime: 'asc' } },
     },
   });
   if (!topic) notFound();
