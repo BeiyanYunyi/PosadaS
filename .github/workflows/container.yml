@@ -31,6 +31,16 @@ jobs:
           cache-to: type=gha,mode=max
       - name: Test init and start using a disposable database
         run: bash test/container-smoke.sh
+      - name: Save the tested image (main only)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: docker save posadas:test -o /tmp/posadas-image.tar
+      - uses: actions/upload-artifact@v4
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        with:
+          name: tested-image
+          path: /tmp/posadas-image.tar
+          retention-days: 1
+          compression-level: 0
   publish:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: test
@@ -49,28 +59,17 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: docker/metadata-action@v5
-        id: meta
+      - uses: actions/download-artifact@v4
         with:
-          images: ${{ env.IMAGE }}
-          tags: |
-            type=raw,value=main
-            type=sha,format=long
-      - name: Publish tested source
-        id: build
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          platforms: linux/amd64
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          provenance: true
-          sbom: true
-      - name: Verify published manifest
-        env:
-          DIGEST: ${{ steps.build.outputs.digest }}
+          name: tested-image
+          path: /tmp
+      - name: Publish exactly the tested image
         run: |
-          docker buildx imagetools inspect "$IMAGE@$DIGEST"
-          echo "Published: $IMAGE@$DIGEST" >> "$GITHUB_STEP_SUMMARY"
+          docker load -i /tmp/posadas-image.tar
+          docker tag posadas:test "$IMAGE:sha-$GITHUB_SHA"
+          docker tag posadas:test "$IMAGE:main"
+          docker push "$IMAGE:sha-$GITHUB_SHA"
+          docker push "$IMAGE:main"
+          docker buildx imagetools inspect "$IMAGE:sha-$GITHUB_SHA"
+          DIGEST=$(docker inspect --format '{{index .RepoDigests 0}}' "$IMAGE:sha-$GITHUB_SHA")
+          echo "Published: $DIGEST" >> "$GITHUB_STEP_SUMMARY"
