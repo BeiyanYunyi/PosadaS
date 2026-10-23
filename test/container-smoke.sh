@@ -41,5 +41,8 @@ for attempt in {1..60}; do
 done
 curl --fail --silent http://localhost:3000/ > /dev/null
 curl --fail --silent http://localhost:3000/sitemap.xml > /dev/null
+curl --fail --silent http://localhost:3000/topic/00000000-0000-4000-8000-000000000001 > /dev/null
+curl --fail --silent http://localhost:3000/topic/00000000-0000-4000-8000-000000000001/opengraph-image -o /tmp/posadas-og.png
+test "$(od -An -tx1 -N8 /tmp/posadas-og.png | tr -d ' \n')" = '89504e470d0a1a0a'
 docker stop --time 10 posadas-web
 test "$(docker inspect -f '{{.State.ExitCode}}' posadas-web)" != 137
