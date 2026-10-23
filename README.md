@@ -75,7 +75,7 @@ reuse, HTTP startup, sitemap access and graceful shutdown. PRs never log into
 GHCR or publish packages. After a reviewed merge to `main`, the publish job runs
 only after tests pass, using the workflow's `GITHUB_TOKEN` with `packages: write`.
 It publishes `ghcr.io/beiyanyunyi/posadas:main` and `sha-<full commit SHA>` for
-`linux/amd64`, with provenance and SBOM, then verifies the published manifest
+`linux/amd64`, by transferring the exact tested image between jobs (no rebuild), then verifies the published manifest
 and writes its immutable digest to the workflow summary.
 
 The workflow does not make the package public, create registry credentials,
@@ -86,5 +86,5 @@ and digest (Renovate can track the mutable `main` tag with digest pinning).
 
 Run the dependency-free initialization tests with
 `node --test test/*.test.mjs`. With Docker available, build `posadas:test` and run
-`bash test/container-smoke.sh`. The smoke test uses an empty schema fixture;
+`bash test/container-smoke.sh`. The smoke test uses a minimal synthetic schema fixture;
 it does not replace validation against a representative application dataset.

@@ -21,6 +21,7 @@ RUN find src drizzle docker -type f -print0 | sort -z | xargs -0 sha256sum > /tm
     | sha256sum | cut -d ' ' -f 1 > .posadas-image-id
 
 FROM node:26-slim AS runtime
+LABEL org.opencontainers.image.source="https://github.com/BeiyanYunyi/PosadaS"
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1
 WORKDIR /app
 COPY --from=dependencies --chown=node:node /app /app
