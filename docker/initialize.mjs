@@ -41,7 +41,7 @@ if (await isReady()) {
     throw new Error('Set SCHEMA_NAME or DATABASE_URL schema parameter to the existing non-public schema');
   }
   process.env.SCHEMA_NAME = schema;
-  const font = process.env.POSADAS_FONT_PATH || './src/app/topic/[topicId]/MapleMono-NF-CN-Regular.ttf';
+  const font = './src/app/topic/[topicId]/MapleMono-NF-CN-Regular.ttf';
   await access(font, constants.R_OK);
   await mkdir(output, { recursive: true });
   // Keep the mount point itself. A failed/interrupted attempt must never be reused.

@@ -9,7 +9,7 @@ cleanup() {
 trap cleanup EXIT
 
 docker run --rm --entrypoint sh posadas:test -c \
-  'test "$(id -u)" = 1000 && test ! -e .next/BUILD_ID && test -s "src/app/topic/[topicId]/MapleMono-NF-CN-Regular.ttf" && test -s licenses/maple-mono/LICENSE.txt'
+  'test "$(id -u)" = 1000 && touch /app/next-env.d.ts && rm /app/next-env.d.ts && test ! -e .next/BUILD_ID && test -s "src/app/topic/[topicId]/MapleMono-NF-CN-Regular.ttf" && test -s licenses/maple-mono/LICENSE.txt'
 if docker run --rm posadas:test start; then
   echo 'Uninitialized image unexpectedly started' >&2; exit 1
 fi
@@ -21,15 +21,17 @@ docker network create posadas-test
 docker volume create posadas-next
 # Mimic Kubernetes fsGroup on a newly mounted emptyDir.
 docker run --rm --user 0:0 -v posadas-next:/app/.next --entrypoint chown posadas:test 1000:1000 /app/.next
+CI_DB_PASSWORD=$(openssl rand -hex 24)
+if [ -n "${GITHUB_ACTIONS:-}" ]; then echo "::add-mask::$CI_DB_PASSWORD"; fi
 docker run -d --name posadas-db --network posadas-test \
-  -e POSTGRES_PASSWORD=ci-only -e POSTGRES_DB=posadas postgres:18
+  -e POSTGRES_PASSWORD="$CI_DB_PASSWORD" -e POSTGRES_DB=posadas postgres:18
 for attempt in {1..60}; do
   if docker exec posadas-db pg_isready -U postgres -d posadas; then break; fi
   sleep 1
 done
 docker exec -i posadas-db psql -v ON_ERROR_STOP=1 -U postgres -d posadas < test/schema.sql
 args=(--network posadas-test -v posadas-next:/app/.next
-  -e 'DATABASE_URL=postgresql://postgres:ci-only@posadas-db:5432/posadas?schema=posadas'
+  -e "DATABASE_URL=postgresql://postgres:${CI_DB_PASSWORD}@posadas-db:5432/posadas?schema=posadas"
   -e SERVE_URL=http://localhost:3000)
 docker run --rm "${args[@]}" posadas:test init
 # Reuse must work even when the database is unreachable; it must not build again.

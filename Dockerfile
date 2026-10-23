@@ -25,7 +25,7 @@ LABEL org.opencontainers.image.source="https://github.com/BeiyanYunyi/PosadaS"
 ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1
 WORKDIR /app
 COPY --from=dependencies --chown=node:node /app /app
-RUN chmod +x /app/docker/entrypoint.sh && mkdir -p /app/.next && chown node:node /app/.next
+RUN chmod +x /app/docker/entrypoint.sh && mkdir -p /app/.next && chown node:node /app /app/.next
 USER node
 EXPOSE 3000
 ENTRYPOINT ["/app/docker/entrypoint.sh"]
