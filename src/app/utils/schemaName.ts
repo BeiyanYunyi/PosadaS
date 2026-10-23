@@ -1,6 +1,7 @@
-const schemaReg = /(?<=schema=).*/;
 const schemaName =
   process.env.SCHEMA_NAME ||
-  schemaReg.exec(process.env.DATABASE_URL!)?.[0] ||
+  (process.env.DATABASE_URL
+    ? new URL(process.env.DATABASE_URL).searchParams.get('schema')
+    : undefined) ||
   'public';
 export default schemaName;

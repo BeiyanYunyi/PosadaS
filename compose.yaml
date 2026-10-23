@@ -2,7 +2,7 @@ services:
   postgres:
     image: tensorchord/vchord-postgres:pg18-v1.0.0
     ports:
-      - "127.0.0.1:5735:5432" # for local development
+      - "127.0.0.1:5735:5432"
     restart: unless-stopped
     environment:
       - PGDATA=/var/pgdata
@@ -10,16 +10,42 @@ services:
       - POSTGRES_PASSWORD=postgres
     volumes:
       - ./data/pgdata:/var/pgdata
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  posadas-init:
+    image: posadas:local
+    build: .
+    command: ["init"]
+    environment: &app-environment
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL to your populated database}
+      SERVE_URL: ${SERVE_URL:?Set SERVE_URL to the public site origin}
+      SCHEMA_NAME: ${SCHEMA_NAME:-}
+      IMAGE_SERVE_URL: ${IMAGE_SERVE_URL:-}
+      BAND_CLIENT_ID: ${BAND_CLIENT_ID:-}
+      BAND_CLIENT_SECRET: ${BAND_CLIENT_SECRET:-}
+      TIER1_BAND: ${TIER1_BAND:-}
+    volumes:
+      - next-build:/app/.next
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   posada-s:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      network: host
+    image: posadas:local
+    command: ["start"]
     ports:
       - "3000:3000"
     restart: unless-stopped
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/posadas?schema=717382
+    environment: *app-environment
+    volumes:
+      - next-build:/app/.next
     depends_on:
-      - postgres
+      posadas-init:
+        condition: service_completed_successfully
+
+volumes:
+  next-build:
