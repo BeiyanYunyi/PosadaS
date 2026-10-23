@@ -84,3 +84,11 @@ test('SIGTERM is forwarded and an interrupted build never becomes ready', { time
   assert.notEqual(await exited, 0);
   await assert.rejects(access(join(f.cwd, '.next/.posadas-ready')));
 });
+
+test('invalid database URL diagnostics never expose its value', async (t) => {
+  const f = await fixture(t);
+  f.env.DATABASE_URL = 'password-sensitive-value';
+  const result = f.run();
+  assert.notEqual(result.status, 0);
+  assert.ok(!result.stderr.includes('password-sensitive-value'));
+});

@@ -27,7 +27,16 @@ if (await isReady()) {
   const serveUrl = new URL(process.env.SERVE_URL || '');
   if (!['http:', 'https:'].includes(serveUrl.protocol)) throw new Error('SERVE_URL must be HTTP(S)');
   // Existing schema.ts uses pgSchema, which cannot represent public.
-  const schema = process.env.SCHEMA_NAME || new URL(process.env.DATABASE_URL).searchParams.get('schema');
+  let databaseUrl;
+  try {
+    databaseUrl = new URL(process.env.DATABASE_URL);
+  } catch {
+    throw new Error('DATABASE_URL must be a valid PostgreSQL URL');
+  }
+  if (!['postgres:', 'postgresql:'].includes(databaseUrl.protocol)) {
+    throw new Error('DATABASE_URL must use postgres:// or postgresql://');
+  }
+  const schema = process.env.SCHEMA_NAME || databaseUrl.searchParams.get('schema');
   if (!schema || schema === 'public') {
     throw new Error('Set SCHEMA_NAME or DATABASE_URL schema parameter to the existing non-public schema');
   }
