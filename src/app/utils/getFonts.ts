@@ -5,8 +5,7 @@ import { cache } from 'react';
 const getFonts = cache(async () => {
   if (process.env.VERCEL) return undefined;
   const font = await readFile(
-    process.env.POSADAS_FONT_PATH ||
-      './src/app/topic/[topicId]/MapleMono-NF-CN-Regular.ttf',
+    './src/app/topic/[topicId]/MapleMono-NF-CN-Regular.ttf',
   );
   return [
     { data: font, name: 'Maple Mono SC NF', style: 'normal' as FontStyle },

@@ -18,7 +18,7 @@ not run `next build`, connect to the application database, or copy `.env` files.
 It includes Maple Mono NF CN Regular v7.9 from the official upstream release,
 verified with SHA256; its SIL OFL license is shipped at
 `/app/licenses/maple-mono/LICENSE.txt`. No package/font downloads happen at startup.
-The optional `POSADAS_FONT_PATH` overrides the original bundled font path.
+The font retains its original fixed application path.
 
 Run the same image in two phases:
 

@@ -11,9 +11,10 @@ async function fixture(t) {
   t.after(() => rm(cwd, { recursive: true, force: true }));
   await mkdir(join(cwd, 'node_modules/next/dist/bin'), { recursive: true });
   await writeFile(join(cwd, '.posadas-image-id'), 'image-one');
-  await writeFile(join(cwd, 'font.ttf'), 'fixture');
+  await mkdir(join(cwd, 'src/app/topic/[topicId]'), { recursive: true });
+  await writeFile(join(cwd, 'src/app/topic/[topicId]/MapleMono-NF-CN-Regular.ttf'), 'fixture');
   const env = { ...process.env, DATABASE_URL: 'postgres://unused/db?schema=test',
-    SERVE_URL: 'https://example.test', SCHEMA_NAME: '', POSADAS_FONT_PATH: join(cwd, 'font.ttf') };
+    SERVE_URL: 'https://example.test', SCHEMA_NAME: '' };
   const cli = join(cwd, 'node_modules/next/dist/bin/next');
   const success = `require('fs').writeFileSync('.next/BUILD_ID', 'build-one');`;
   await writeFile(cli, success);
@@ -62,7 +63,7 @@ test('zero exit without BUILD_ID is not success', async (t) => {
 
 test('missing database, invalid URL, public schema, and missing font fail before build', async (t) => {
   const f = await fixture(t);
-  for (const [key, value] of [['DATABASE_URL', ''], ['SERVE_URL', 'invalid'], ['SCHEMA_NAME', 'public'], ['POSADAS_FONT_PATH', '/nonexistent-font']]) {
+  for (const [key, value] of [['DATABASE_URL', ''], ['SERVE_URL', 'invalid'], ['SCHEMA_NAME', 'public']]) {
     const before = f.env[key];
     f.env[key] = value;
     assert.notEqual(f.run().status, 0, key);
@@ -82,5 +83,20 @@ test('SIGTERM is forwarded and an interrupted build never becomes ready', { time
   }
   child.kill('SIGTERM');
   assert.notEqual(await exited, 0);
+  await assert.rejects(access(join(f.cwd, '.next/.posadas-ready')));
+});
+
+test('invalid database URL diagnostics never expose its value', async (t) => {
+  const f = await fixture(t);
+  f.env.DATABASE_URL = 'password-sensitive-value';
+  const result = f.run();
+  assert.notEqual(result.status, 0);
+  assert.ok(!result.stderr.includes('password-sensitive-value'));
+});
+
+test('missing bundled font fails before build', async (t) => {
+  const f = await fixture(t);
+  await rm(join(f.cwd, 'src/app/topic/[topicId]/MapleMono-NF-CN-Regular.ttf'));
+  assert.notEqual(f.run().status, 0);
   await assert.rejects(access(join(f.cwd, '.next/.posadas-ready')));
 });

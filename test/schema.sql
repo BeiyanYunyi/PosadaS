@@ -13,6 +13,6 @@ CREATE TABLE posadas.reply (
 );
 
 INSERT INTO posadas."topicList" ("topicID", title, "authorID", "authorName", reply, "lastReplyTime", "isElite", content, "createTime")
-VALUES ('00000000-0000-4000-8000-000000000001', 'Container test 字体测试', 'test-author', 'CI', 1, 1700000000000, true, 'Synthetic container fixture', 1700000000000);
+VALUES ('00000000-0000-4000-8000-000000000001', 'Container test 字体测试', 'test-author', 'CI', 1, 1700000000, true, 'Synthetic container fixture', 1700000000);
 INSERT INTO posadas.reply ("replyID", "topicID", "authorID", "authorName", "isPoster", "replyTime", content, votes)
-VALUES ('00000000-0000-4000-8000-000000000002', '00000000-0000-4000-8000-000000000001', 'test-author', 'CI', true, 1700000000000, 'Synthetic reply', 1);
+VALUES ('00000000-0000-4000-8000-000000000002', '00000000-0000-4000-8000-000000000001', 'test-author', 'CI', true, 1700000000, 'Synthetic reply', 1);
