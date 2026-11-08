@@ -10,29 +10,31 @@
     "build": "next build",
     "start": "next start"
   },
-  "packageManager": "pnpm@11.25.0+sha512.5cde925b4f075f725eb71fbae18a42ffe784524789f19b61c731cb8721ec28aaee160e01a8d5af4fedb2a42cdbf300efe23db356b0d4a17b4d63e11f8ab7c956",
+  "packageManager": "pnpm@12.18.0",
   "dependencies": {
-    "@pandacss/dev": "^1.12.0",
-    "@types/node": "26.4.1",
-    "@types/react": "19.2.18",
-    "@types/react-dom": "19.2.7",
+    "@pandacss/dev": "^2.5.0",
+    "@pandacss/preset-base": "^2.5.0",
+    "@pandacss/preset-panda": "^2.5.0",
+    "@types/node": "26.6.6",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
     "@vercel/postgres": "^0.10.0",
     "clsx": "^2.1.1",
     "drizzle-orm": "1.0.0-rc.4",
-    "foxact": "^0.3.10",
+    "foxact": "^0.3.12",
     "heti": "^0.9.6",
-    "html-react-parser": "^6.1.7",
-    "next": "16.4.1",
-    "pg": "^8.23.0",
-    "react": "19.2.8",
-    "react-dom": "19.2.8",
+    "html-react-parser": "^6.1.9",
+    "next": "16.4.5",
+    "pg": "^8.23.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
     "sharp": "^0.35.5",
     "typescript": "7.0.2"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.12",
+    "@biomejs/biome": "^2.6.6",
     "@types/pg": "^8.23.1",
     "drizzle-kit": "1.0.0-rc.4",
-    "schema-dts": "^2.0.0"
+    "schema-dts": "^2.1.0"
   }
 }
